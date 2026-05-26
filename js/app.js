@@ -1,11 +1,8 @@
-/* ============================================================
-   PHYSICS — HELPERS
-   ============================================================ */
+
 
       const KMH = 3.6;
       const G = 9.81;
 
-      /* ---------------- Linear, constant force ---------------- */
       function vLinearForce(t, m, F, b) {
         if (b <= 0) return (F * t) / m;
         const vinf = F / b;
@@ -23,7 +20,6 @@
         return (F - b * v) / m;
       }
 
-      /* ---------------- Quadratic, constant force ---------------- */
       function vQuadForce(t, m, F, c) {
         if (c <= 0) return (F * t) / m;
         const vinf = Math.sqrt(F / c);
@@ -41,14 +37,13 @@
         return (F - c * v * v) / m;
       }
 
-      /* ---------------- Linear, constant power ---------------- */
       function vLinearPower(t, m, P, b) {
         if (b <= 0 || P <= 0) return 0;
         const vstar2 = P / b;
         const u = 1 - Math.exp((-2 * b * t) / m);
         return Math.sqrt(Math.max(vstar2 * u, 0));
       }
-      /* ---------------- Quadratic, constant power ---------------- */
+
       function t95Numeric(vinf, m, P, c) {
         const target = 0.95 * vinf;
         let v = 1e-3,
@@ -68,12 +63,6 @@
         return NaN;
       }
 
-      /* ============================================================
-   CSS CYCLIST — inline DOM (no iframe).
-   The cyclist is rendered entirely with HTML + CSS (no SVG).
-   Wheel rotation is controlled by JS to keep rolling-without-
-   slipping locked to translation:  θ = s / R.
-   ============================================================ */
       const BIKE_STAGE_HTML =
         '<div class="bike-stage">' +
         '<div class="bike-riding">' +
@@ -101,10 +90,6 @@
         "</div>" +
         "</div>";
 
-      /** Inject the cyclist DOM into each bike container.
-       *  The CSS for everything inside .bike-stage is scoped in styles.css
-       *  so the parent page's resets (box-sizing, margins, fonts) don't
-       *  reach into the cyclist subtree. */
       function injectBikes() {
         ["bike-L", "bike-Q", "hero-bike"].forEach((id) => {
           const el = document.getElementById(id);
@@ -114,10 +99,6 @@
         });
       }
 
-      /** Rolling-without-slipping wheel rotation: set transform: rotate(...)
-       *  on the .leftTyre / .rightTyre divs. Wheel outer radius (with border)
-       *  in stage-internal CSS pixels = 85, scaled by the .bike-stage transform
-       *  (0.30 sim, 0.42 hero) to give the effective screen-pixel radius. */
       function updateBikeWheels(bikeEl, distancePx) {
         if (!bikeEl) return;
         const tyres = bikeEl.querySelectorAll(".leftTyre, .rightTyre");
@@ -134,8 +115,6 @@
         });
       }
 
-      /** Drive the hero bike: continuous JS-driven motion across the scene,
-       *  with wheel rotation locked to translation. */
       function animateHeroBike() {
         const bike = document.getElementById("hero-bike");
         if (!bike) return;
@@ -156,7 +135,6 @@
           const xPx = startX + frac * (endX - startX);
           bike.style.left = xPx + "px";
 
-          // Distance traveled in this cycle, in screen pixels.
           const travel = xPx - startX;
           updateBikeWheels(bike, travel);
 
@@ -165,9 +143,6 @@
         requestAnimationFrame(frame);
       }
 
-      /* ============================================================
-   COLOR PALETTE (Plotly)
-   ============================================================ */
       const COL = {
         paper: "rgba(0,0,0,0)",
         plot: "rgba(0,0,0,0)",
@@ -255,10 +230,6 @@
           extras,
         );
       }
-
-      /* ============================================================
-   DYNAMICS SIMULATOR
-   ============================================================ */
 
       const dynState = {
         mode: "F",
@@ -513,8 +484,6 @@
           if (tL) tL.style.width = pctL + "%";
           if (tQ) tQ.style.width = pctQ + "%";
 
-          // Wheel rotation synchronized with screen-pixel translation
-          // (rolling without slipping: θ = s / R).
           const canvas = bL ? bL.parentElement : null;
           if (canvas) {
             const cw = canvas.clientWidth;
@@ -582,9 +551,6 @@
         });
       });
 
-      /* ============================================================
-   ENERGY SIMULATOR
-   ============================================================ */
       const enState = {
         P0: 80,
         b: 1.32,
@@ -794,9 +760,6 @@
         plotEnergy();
       });
 
-      /* ============================================================
-   SCALING PLOT
-   ============================================================ */
       function plotScaling() {
         const b = 1.32,
           c = 0.165;
@@ -863,9 +826,6 @@
         });
       }
 
-      /* ============================================================
-   PRACTICAL CALCULATOR
-   ============================================================ */
       const apState = {
         rho: 1.225,
         CdA: 0.269,
@@ -1004,9 +964,6 @@
         },
       );
 
-      /* ============================================================
-   INIT
-   ============================================================ */
       window.addEventListener("load", () => {
         injectBikes();
         animateHeroBike();
