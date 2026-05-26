@@ -394,10 +394,14 @@
     border-radius: 2px;
     padding: 20px 28px 20px 26px;
     margin: 22px 0;
-    overflow-x: auto;
+    overflow: visible;
     position: relative;
     font-size: 1.05em;
   }
+  /* MathJax's mjx-container can ship its own horizontal scrollbar when the
+     rendered SVG width exceeds the parent by a sub-pixel rounding. Suppress
+     that here — equations are sized to fit the layout. */
+  mjx-container, mjx-container svg { overflow: visible !important; }
   .eq-block.linear { border-left-color: var(--linear); background: linear-gradient(to right, rgba(29, 63, 122, 0.025), var(--card) 30%); }
   .eq-block.quadratic { border-left-color: var(--quadratic); background: linear-gradient(to right, rgba(122, 31, 31, 0.025), var(--card) 30%); }
   .eq-block.gold { border-left-color: var(--gold); background: linear-gradient(to right, rgba(138, 90, 24, 0.03), var(--card) 30%); }
@@ -549,8 +553,93 @@
     padding-bottom: 10px;
     border-bottom: 1px solid var(--rule-soft);
   }
-  .slider-row { margin-bottom: 15px; }
+  .slider-row { margin-bottom: 15px; position: relative; }
   .slider-row:last-child { margin-bottom: 0; }
+
+  /* === Hover tooltip on parameter rows === */
+  .slider-row[data-tooltip] .label-name {
+    cursor: help;
+    border-bottom: 1px dotted var(--ink-mute);
+  }
+  .slider-row[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    width: max-content;
+    max-width: 280px;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 10px 14px;
+    border-radius: 4px;
+    font-family: 'EB Garamond', serif;
+    font-size: 0.95rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.45;
+    text-align: left;
+    white-space: normal;
+    hyphens: auto;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.18s ease 0.2s, transform 0.18s ease 0.2s;
+    z-index: 100;
+    box-shadow: 0 6px 22px rgba(28, 26, 23, 0.22), 0 2px 6px rgba(28, 26, 23, 0.12);
+  }
+  .slider-row[data-tooltip]::before {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 4px);
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: var(--ink);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.18s ease 0.2s;
+    z-index: 101;
+  }
+  .slider-row[data-tooltip]:hover::after,
+  .slider-row[data-tooltip]:hover::before {
+    opacity: 1;
+  }
+  .slider-row[data-tooltip]:hover::after {
+    transform: translateX(-50%) translateY(0);
+  }
+  /* Tooltips on toggle buttons too */
+  .toggle-btn[data-tooltip] {
+    position: relative;
+  }
+  .toggle-btn[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    width: max-content;
+    max-width: 260px;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 10px 14px;
+    border-radius: 4px;
+    font-family: 'EB Garamond', serif;
+    font-size: 0.92rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.45;
+    text-align: left;
+    white-space: normal;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.18s ease 0.2s, transform 0.18s ease 0.2s;
+    z-index: 100;
+    box-shadow: 0 6px 22px rgba(28, 26, 23, 0.22), 0 2px 6px rgba(28, 26, 23, 0.12);
+  }
+  .toggle-btn[data-tooltip]:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
   .slider-label {
     display: flex; justify-content: space-between; align-items: baseline;
     margin-bottom: 6px;
@@ -1160,14 +1249,14 @@
           <div class="control-group">
             <h4>Modo de controle</h4>
             <div class="toggle-row">
-              <button class="toggle-btn active" id="modeForce" data-mode="F">Força const.</button>
-              <button class="toggle-btn" id="modePower" data-mode="P">Potência const.</button>
+              <button class="toggle-btn active" id="modeForce" data-mode="F" data-tooltip="Cenário A: o ciclista aplica força constante F₀ nos pedais. EDO linear (mv̇ = F₀ − D(v)) com soluções exponencial ou tangente hiperbólica. Idealização útil para análise mas pouco realista.">Força const.</button>
+              <button class="toggle-btn" id="modePower" data-mode="P" data-tooltip="Cenário B: o ciclista mantém potência mecânica P constante. Reflete como medidores de potência operam. EDO singular em v=0 — toma-se v₀ → 0⁺. É o modo dominante na literatura moderna de ciclismo.">Potência const.</button>
             </div>
           </div>
 
           <div class="control-group">
             <h4>Parâmetros do ciclista</h4>
-            <div class="slider-row">
+            <div class="slider-row" data-tooltip="Massa combinada do ciclista + bicicleta + equipamento. Entra na 2ª lei de Newton (F = m·a) e define a escala temporal τ = m/b. Ciclismo típico: 70–90 kg.">
               <div class="slider-label">
                 <span class="label-name">Massa total $m$</span>
                 <span class="label-value" id="val-m">75 kg</span>
@@ -1175,7 +1264,7 @@
               <input type="range" id="sl-m" min="40" max="120" step="0.5" value="75">
             </div>
 
-            <div class="slider-row" id="rowF">
+            <div class="slider-row" id="rowF" data-tooltip="Força propulsora constante aplicada pelo ciclista. Modo idealizado — em prática controlamos potência, não força. Em cruzeiro: 10–30 N. Valores típicos no exemplo numérico: F₀ ≈ 18 N.">
               <div class="slider-label">
                 <span class="label-name">Força propulsora $F_0$</span>
                 <span class="label-value" id="val-F">18 N</span>
@@ -1183,7 +1272,7 @@
               <input type="range" id="sl-F" min="2" max="60" step="0.5" value="18">
             </div>
 
-            <div class="slider-row" id="rowP" style="display:none;">
+            <div class="slider-row" id="rowP" style="display:none;" data-tooltip="Potência mecânica entregue às rodas. Modo realista — medidores de potência (powermeters) medem exatamente isso. Cruzeiro recreativo: 150–250 W. Limiar funcional (FTP): 280–350 W. Sprint: >800 W.">
               <div class="slider-label">
                 <span class="label-name">Potência mecânica $P$</span>
                 <span class="label-value" id="val-P">250 W</span>
@@ -1191,7 +1280,7 @@
               <input type="range" id="sl-P" min="40" max="600" step="5" value="250">
             </div>
 
-            <div class="slider-row">
+            <div class="slider-row" data-tooltip="Constante do arrasto linear de Stokes (F = b·v). Fisicamente válido apenas para Re ≪ 1 (e.g., partícula em fluido viscoso). Em ciclismo entra como exercício didático — não é realista para velocidades de estrada.">
               <div class="slider-label">
                 <span class="label-name">Coef. linear $b$</span>
                 <span class="label-value linear" id="val-b">1.32 N·s/m</span>
@@ -1199,7 +1288,7 @@
               <input type="range" id="sl-b" min="0.1" max="6.0" step="0.01" value="1.32">
             </div>
 
-            <div class="slider-row">
+            <div class="slider-row" data-tooltip="Constante do arrasto quadrático de Newton (F = c·v²), com c = ½·ρ·Cd·A. Regime fisicamente correto para ciclismo (Re ~ 10⁵, escoamento turbulento). Ciclista típico em postura de estrada: c ≈ 0.15–0.25 N·s²/m².">
               <div class="slider-label">
                 <span class="label-name">Coef. quadrático $c$</span>
                 <span class="label-value quadratic" id="val-c">0.165 N·s²/m²</span>
@@ -1207,7 +1296,7 @@
               <input type="range" id="sl-c" min="0.02" max="0.6" step="0.005" value="0.165">
             </div>
 
-            <div class="slider-row">
+            <div class="slider-row" data-tooltip="Duração da simulação no eixo t dos gráficos. Aumente para ver o regime estacionário (v → v∞); diminua para focar na fase transitória inicial onde o arrasto ainda é pequeno e v(t) ~ √t no modo potência.">
               <div class="slider-label">
                 <span class="label-name">Tempo de simulação</span>
                 <span class="label-value" id="val-tmax">120 s</span>
@@ -1398,7 +1487,7 @@
           <div class="control-group">
             <h4>Parâmetros físicos</h4>
 
-            <div class="slider-row">
+            <div class="slider-row" data-tooltip="Custo metabólico aproximadamente constante por unidade de tempo: BMR + postura + equilíbrio + trabalho interno dos membros. É o termo P₀/v em E/d que faz aparecer o mínimo (sem ele, a velocidade ótima 'tende a zero'). Estimado em 60–100 W para ciclismo recreativo.">
               <div class="slider-label">
                 <span class="label-name">Potência basal $P_0$</span>
                 <span class="label-value gold" id="val-P0">80 W</span>
@@ -1406,7 +1495,7 @@
               <input type="range" id="en-P0" min="0" max="200" step="1" value="80">
             </div>
 
-            <div class="slider-row">
+            <div class="slider-row" data-tooltip="Constante do arrasto linear de Stokes (F = b·v). Aqui altera a curva azul de E/d e desloca v*_linear = √(P₀/b). Sensibilidade: v* ∝ b⁻¹/².">
               <div class="slider-label">
                 <span class="label-name">Coef. linear $b$</span>
                 <span class="label-value linear" id="val-bE">1.32 N·s/m</span>
@@ -1414,7 +1503,7 @@
               <input type="range" id="en-b" min="0.1" max="6.0" step="0.01" value="1.32">
             </div>
 
-            <div class="slider-row">
+            <div class="slider-row" data-tooltip="Constante do arrasto quadrático (F = c·v²). Altera a curva bordô de E/d e desloca v*_quad = ∛(P₀/(2c)). Sensibilidade: v* ∝ c⁻¹/³ — bem menor que no linear, explicando por que ciclistas adotam velocidades de cruzeiro parecidas mesmo com fisiologias diferentes.">
               <div class="slider-label">
                 <span class="label-name">Coef. quadrático $c$</span>
                 <span class="label-value quadratic" id="val-cE">0.165 N·s²/m²</span>
@@ -1422,7 +1511,7 @@
               <input type="range" id="en-c" min="0.02" max="0.6" step="0.005" value="0.165">
             </div>
 
-            <div class="slider-row">
+            <div class="slider-row" data-tooltip="Resistência de rolamento dos pneus contra o asfalto: F_r = C_rr · m · g. Termo constante em E/d (independe de v) — desloca a curva verticalmente mas NÃO muda a posição da velocidade ótima v*. Bike de estrada: 2–3 N. MTB em terra: 8–15 N.">
               <div class="slider-label">
                 <span class="label-name">Rolamento $F_r$</span>
                 <span class="label-value" id="val-Fr">2.35 N</span>
@@ -1434,9 +1523,9 @@
           <div class="control-group">
             <h4>Curvas exibidas</h4>
             <div class="toggle-row" style="flex-direction: column; gap: 6px;">
-              <button class="toggle-btn active linear" id="toggleLin">Modelo I linear</button>
-              <button class="toggle-btn active quadratic" id="toggleQuad">Modelo II quadrático</button>
-              <button class="toggle-btn active gold" id="toggleP0">Termo $P_0/v$</button>
+              <button class="toggle-btn active linear" id="toggleLin" data-tooltip="Mostra/oculta a curva E/d do modelo de arrasto LINEAR (F = b·v). Mínimo em v* = √(P₀/b).">Modelo I linear</button>
+              <button class="toggle-btn active quadratic" id="toggleQuad" data-tooltip="Mostra/oculta a curva E/d do modelo de arrasto QUADRÁTICO (F = c·v²) — fisicamente correto para ciclismo. Mínimo em v* = ∛(P₀/(2c)).">Modelo II quadrático</button>
+              <button class="toggle-btn active gold" id="toggleP0" data-tooltip="Liga/desliga o termo P₀/v em E/d(v). LIGADO: aparece um mínimo interior (v* finito). DESLIGADO: E/d é monotonicamente crescente — o 'ótimo' fica em v → 0⁺, fisicamente inútil. Demonstra por que o custo basal é essencial.">Termo $P_0/v$</button>
             </div>
           </div>
 
@@ -1655,14 +1744,14 @@
 
           <div class="control-group">
             <h4>Parâmetros aerodinâmicos</h4>
-            <div class="slider-row">
+            <div class="slider-row" data-tooltip="Densidade do ar atmosférico. Nível do mar a 15°C: 1.225 kg/m³. Em altitude (e.g., 1500 m): ~1.05 kg/m³ — daí o efeito do 'ar rarefeito' em recordes mundiais (Cidade do México, hora-recordes em altitude).">
               <div class="slider-label">
                 <span class="label-name">Densidade do ar $\rho$</span>
                 <span class="label-value" id="val-rho">1.225 kg/m³</span>
               </div>
               <input type="range" id="ap-rho" min="0.8" max="1.4" step="0.005" value="1.225">
             </div>
-            <div class="slider-row">
+            <div class="slider-row" data-tooltip="Produto entre coeficiente de arrasto Cd e área frontal A do ciclista. Postura aerodinâmica (drops, contrarrelógio): 0.20–0.30 m². Postura ereta (cicloturismo): 0.45–0.60 m². É a maior alavanca de melhoria em ciclismo competitivo — daí guidões TT, capacetes aero, etc.">
               <div class="slider-label">
                 <span class="label-name">Área de arrasto $C_dA$</span>
                 <span class="label-value" id="val-CdA">0.269 m²</span>
@@ -1673,28 +1762,28 @@
 
           <div class="control-group">
             <h4>Parâmetros fisiológicos</h4>
-            <div class="slider-row">
+            <div class="slider-row" data-tooltip="Custo metabólico aproximadamente constante por unidade de tempo: BMR + postura + equilíbrio + trabalho interno dos membros. É o termo que faz aparecer um mínimo no E/d(v). Recreativo: 60–100 W. Profissional: 100–150 W.">
               <div class="slider-label">
                 <span class="label-name">Potência basal $P_0$</span>
                 <span class="label-value gold" id="val-P0p">80 W</span>
               </div>
               <input type="range" id="ap-P0" min="20" max="250" step="1" value="80">
             </div>
-            <div class="slider-row">
+            <div class="slider-row" data-tooltip="Massa total do sistema: ciclista + bicicleta + equipamento. Entra no rolamento (F_r = C_rr · m · g) e na cinética. Ciclismo típico: 70–90 kg (rider 65–80 kg + bike 7–12 kg).">
               <div class="slider-label">
                 <span class="label-name">Massa total $m$</span>
                 <span class="label-value" id="val-mp">75 kg</span>
               </div>
               <input type="range" id="ap-m" min="40" max="120" step="0.5" value="75">
             </div>
-            <div class="slider-row">
+            <div class="slider-row" data-tooltip="Coeficiente adimensional de resistência ao rolamento. Pneu de estrada bom (24–28 mm, alta pressão): 0.003–0.005. Pneu MTB de cravos: 0.010–0.015. Asfalto novo melhora; piso de paralelepípedos piora muito.">
               <div class="slider-label">
                 <span class="label-name">$C_{rr}$ rolamento</span>
                 <span class="label-value" id="val-Crr">0.0032</span>
               </div>
               <input type="range" id="ap-Crr" min="0" max="0.012" step="0.0001" value="0.0032">
             </div>
-            <div class="slider-row">
+            <div class="slider-row" data-tooltip="Fração da energia metabólica convertida em trabalho mecânico nas pernas (E_mec = η · E_metabólica). Humana típica em cruzeiro: 20–25%. Resto vira calor (por isso o ciclista sua). É como dividimos a energia mecânica calculada para obter a energia metabólica real consumida.">
               <div class="slider-label">
                 <span class="label-name">Eficiência muscular $\eta$</span>
                 <span class="label-value" id="val-eta">0.25</span>
