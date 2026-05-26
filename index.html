@@ -768,419 +768,28 @@
   .sim-wind.sw-6 { top: 51%; left: 78%; width: 95px;  animation-delay: 1.1s; }
 
   /* ============================================================
-     CSS-DRAWN CYCLIST — straight from bike/style.css
-
-     Strategy: a 600×600 .bike-stage replicates the original
-     .bike-riding container (with the same flex centering of the
-     cyclist). The whole stage is then scaled down and positioned
-     so the wheel contact point — (300, 515) inside the stage —
-     lands exactly on the bike-marker anchor (canvas ground line).
-
-     IMPORTANT: the original CSS assumes  box-sizing: content-box.
-     This page has a global `* { box-sizing: border-box }` reset,
-     so we must restore content-box for everything inside the
-     stage — otherwise borders eat the inner area and the cyclist
-     parts are sized wrong (the shirt collapses, wheels shrink, etc.)
+     CSS CYCLIST — embedded via iframe of bike/embed.html.
+     This gives total CSS isolation from the academic page's
+     global resets (box-sizing, margin/padding, font-family etc.)
+     — the cyclist renders identically to the original bike/.
+     The iframe is 600×600 (matching bike/embed.html's html/body)
+     and is scaled + positioned so the wheel ground-contact point
+     (300, 515 inside the iframe) lands on the bike-marker anchor.
      ============================================================ */
-
-  .bike-stage,
-  .bike-stage *,
-  .bike-stage *::before,
-  .bike-stage *::after {
-    box-sizing: content-box;
-  }
-
-  .bike-marker .bike-stage,
-  .bike-icon-hero .bike-stage {
+  .bike-marker .bike-frame,
+  .bike-icon-hero .bike-frame {
     position: absolute;
-    top: -515px;
-    left: -300px;
     width: 600px;
     height: 600px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    pointer-events: none;
+    border: 0;
+    background: transparent;
+    top: -515px;
+    left: -300px;
     transform-origin: 300px 515px;
+    pointer-events: none;
   }
-  .bike-marker .bike-stage     { transform: scale(0.3);  }
-  .bike-icon-hero .bike-stage  { transform: scale(0.42); }
-
-  /* ---- CYCLIST: copied verbatim from bike/style.css ---- */
-
-  .bike-stage .cyclist {
-    position: relative;
-    animation: cyc-ride 1s linear infinite;
-    top: 20px;
-  }
-  @keyframes cyc-ride {
-    0%, 50%, 100% { transform: scaleY(1); }
-    25%, 75%      { transform: scaleY(1.02); }
-  }
-
-  .bike-stage .bike {
-    position: relative;
-    background-color: #e5383b;
-    width: 180px;
-    height: 10px;
-    border-radius: 10px;
-    box-shadow: inset 3px -3px rgba(0, 0, 0, 0.1);
-  }
-  .bike-stage .bike::before,
-  .bike-stage .bike::after {
-    content: "";
-    position: absolute;
-    background-color: #e5383b;
-    width: 8px;
-    height: 140px;
-    top: -10px;
-  }
-  .bike-stage .bike::before {
-    transform: rotate(35deg);
-    left: 126px;
-    box-shadow: -120px 85px #e5383b, 0px -30px #e5383b;
-  }
-  .bike-stage .bike::after {
-    transform: rotate(-35deg);
-    left: 49px;
-    box-shadow: 120px 85px #e5383b, 0px -30px #e5383b;
-  }
-
-  .bike-stage .leftTyre,
-  .bike-stage .rightTyre {
-    width: 150px;
-    height: 150px;
-    position: absolute;
-    border: 10px solid #333;
-    border-radius: 50%;
-    z-index: 1;
-    top: 30px;
-    /* spin disabled — JS sets transform: rotate() via θ = s/R */
-  }
-  .bike-stage .leftTyre  { left: -140px; }
-  .bike-stage .rightTyre { left:  155px; }
-  /* note: ::before (white inner ring), ::after (single white spoke)
-     and the spokes asterisk are intentionally NOT included */
-
-  .bike-stage .wheel {
-    z-index: 6;
-    position: absolute;
-    border-radius: 50%;
-    background-color: #a4161a;
-    width: 20px;
-    height: 20px;
-    top: 105px;
-    left: -65px;
-    box-shadow: 295px 0 #a4161a, 146px 0px #a4161a;
-  }
-  .bike-stage .wheel::before {
-    content: "";
-    position: absolute;
-    width: 50px;
-    height: 50px;
-    border-radius: 100%;
-    border-top: 11px solid #333;
-    border-left: 8px solid #e5383b;
-    border-bottom: 8px solid transparent;
-    border-right: 8px solid transparent;
-    transform: rotate(80deg);
-    top: -140px;
-    left: 240.2px;
-  }
-
-  .bike-stage .pedals {
-    position: relative;
-    z-index: 7;
-    width: 50px;
-    height: 50px;
-    border: 5px solid #ba181b;
-    border-radius: 50%;
-    top: 85px;
-    left: 60px;
-    animation: cyc-spin 1s linear infinite;
-  }
-  @keyframes cyc-spin {
-    from { transform: rotate(0deg);   }
-    to   { transform: rotate(360deg); }
-  }
-  .bike-stage .pedals::before {
-    content: "";
-    position: absolute;
-    border-radius: 10px;
-    background-color: #adb5bd;
-    height: 30px;
-    width: 5px;
-    left: 22px;
-    top: -5px;
-  }
-
-  .bike-stage .chain {
-    position: absolute;
-    top: 81px;
-  }
-  .bike-stage .chain::before,
-  .bike-stage .chain::after {
-    content: "";
-    position: absolute;
-    background-color: #333;
-    width: 140px;
-    height: 2px;
-    left: -60px;
-  }
-  .bike-stage .chain::before { top: 20px; transform: rotate(-10deg); }
-  .bike-stage .chain::after  { top: 47px; transform: rotate( 10deg); }
-
-  .bike-stage .girl { position: absolute; }
-
-  .bike-stage .top {
-    position: absolute;
-    width: 80px;
-    height: 80px;
-    border-top:  50px solid #e9d8a6;
-    border-left: 50px solid #e9d8a6;
-    border-top-left-radius: 100%;
-    top: -190px;
-    left: -18px;
-  }
-  .bike-stage .top::before {
-    content: "";
-    position: absolute;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: #e9d8a6;
-    left: 50px;
-    top: -50px;
-    box-shadow: -10px 10px #e9d8a6;
-  }
-
-  .bike-stage .rightArm,
-  .bike-stage .leftArm {
-    position: absolute;
-    width: 15px;
-    height: 100px;
-    border-radius: 20px;
-    transform: rotate(-30deg);
-  }
-  .bike-stage .rightArm {
-    background-color: #deab90;
-    left: 130px;
-    top: -175px;
-    z-index: 8;
-  }
-  .bike-stage .leftArm {
-    background-color: #cd9777;
-    left: 105px;
-    top: -185px;
-    z-index: -1;
-  }
-  .bike-stage .rightArm::before,
-  .bike-stage .leftArm::before {
-    content: "";
-    position: absolute;
-    width: 15px;
-    height: 100px;
-    border-radius: 20px;
-    top: 85px;
-    left: 15px;
-    transform: rotate(-20deg);
-  }
-  .bike-stage .rightArm::before { background-color: #deab90; }
-  .bike-stage .leftArm::before  { background-color: #cd9777; }
-
-  .bike-stage .head {
-    position: absolute;
-    background-color: #cd9777;
-    width: 40px;
-    height: 20px;
-    top: -190px;
-    left: 110px;
-    z-index: -1;
-    transform: rotate(-20deg);
-  }
-  .bike-stage .head::before,
-  .bike-stage .head::after {
-    content: "";
-    position: absolute;
-    background-color: #deab90;
-    border-radius: 50%;
-  }
-  .bike-stage .head::before { width: 75px; height: 75px; left: 30px; top: -30px; }
-  .bike-stage .head::after  { width: 20px; height: 20px; left: 78px; top:  25px; }
-
-  .bike-stage .hair {
-    position: absolute;
-    width: 80px;
-    height: 40px;
-    border-radius: 0 100% 0 0;
-    background-color: #bb3e03;
-    top: -245px;
-    left: 142px;
-    z-index: 10;
-  }
-  .bike-stage .hair::after {
-    content: "";
-    position: absolute;
-    height: 40px;
-    width: 40px;
-    border-radius: 50%;
-    background-color: #bb3e03;
-    left: -20px;
-  }
-  .bike-stage .hair::before {
-    content: "";
-    position: absolute;
-    width: 80px;
-    height: 25px;
-    border-radius: 50% 0/100% 0;
-    background-color: #ee9b00;
-    transform-origin: right;
-    left: -84px;
-    top: 37px;
-    animation: cyc-hair 1s linear infinite;
-  }
-  @keyframes cyc-hair {
-    0%, 50%, 100% { transform: rotate(0); }
-    25%, 75%      { transform: rotate(10deg); }
-  }
-
-  .bike-stage .strap {
-    position: absolute;
-    background-color: #333;
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    top: -197px;
-    left: 197px;
-  }
-  .bike-stage .strap::after {
-    content: "";
-    position: absolute;
-    background-color: #333;
-    width: 7px;
-    height: 60px;
-    border-radius: 10px;
-    transform: rotate(-15deg);
-    top: -22px;
-    left: -30px;
-  }
-  .bike-stage .strap::before {
-    content: "";
-    position: absolute;
-    background-color: #ee9b00;
-    width: 60px;
-    height: 30px;
-    border-radius: 50px 50px 50px 0;
-    left: -60px;
-    top: -30px;
-  }
-
-  .bike-stage .trousers { position: absolute; top: -90px; left: -20px; }
-  .bike-stage .rightLeg {
-    position: absolute;
-    background-color: #0a9396;
-    width: 120px;
-    height: 37px;
-    top: 17px;
-    left: 12px;
-    border-radius: 0 10px 0 30px;
-    transform-origin: top left;
-    z-index: 7;
-    animation: cyc-rotate 1s linear infinite;
-  }
-  .bike-stage .trousers::after {
-    content: "";
-    position: absolute;
-    width: 60px;
-    height: 60px;
-    border-radius: 0 25px 50px 50px;
-    left: -5px;
-    background-color: #0a9396;
-    transform: rotate(20deg);
-  }
-  .bike-stage .trousers::before {
-    content: "";
-    position: absolute;
-    background-color: #333;
-    width: 65px;
-    height: 25px;
-    border-radius: 20px;
-    left: -10px;
-    top: 50px;
-  }
-  .bike-stage .leftLeg {
-    position: absolute;
-    background-color: #005f73;
-    width: 120px;
-    height: 37px;
-    top: 14px;
-    left: 13px;
-    border-radius: 0 10px 0 30px;
-    transform-origin: top left;
-    z-index: -4;
-    animation: cyc-rotate 1s linear infinite;
-    animation-delay: 0.5s;
-  }
-  @keyframes cyc-rotate {
-    0%   { transform: rotate(0); }
-    25%  { transform: rotate(15deg); }
-    55%  { transform: rotate(30deg); }
-    80%  { transform: rotate(15deg); }
-    100% { transform: rotate(0); }
-  }
-
-  .bike-stage .calf {
-    position: absolute;
-    transform-origin: top;
-    width: 33px;
-    height: 120px;
-    background-color: #0a9396;
-    left: 87px;
-    top: 9px;
-    border-radius: 0 10px 0 0;
-    animation: cyc-cycle 1s linear infinite;
-  }
-  .bike-stage .leftcalf {
-    position: absolute;
-    transform-origin: top;
-    width: 33px;
-    height: 120px;
-    background-color: #005f73;
-    left: 87px;
-    top: 9px;
-    border-radius: 0 10px 0 0;
-    animation: cyc-cycle 1s linear infinite;
-    animation-delay: 0.5s;
-  }
-  .bike-stage .leftcalf::before,
-  .bike-stage .calf::before {
-    content: "";
-    position: absolute;
-    background-color: #bb3e03;
-    width: 55px;
-    height: 30px;
-    border-radius: 0 20px 0 0;
-    top: 119px;
-    /* (white shoe-sole shadow intentionally omitted) */
-  }
-  .bike-stage .leftcalf::after,
-  .bike-stage .calf::after {
-    content: "";
-    position: absolute;
-    background-color: #333;
-    width: 35px;
-    height: 10px;
-    border-radius: 10px;
-    top: 150px;
-    left: 10px;
-  }
-  @keyframes cyc-cycle {
-    0%   { transform: rotate(0); }
-    25%  { transform: rotate(-27deg); }
-    50%  { transform: rotate(-32deg); }
-    75%  { transform: rotate(-10deg); }
-    100% { transform: rotate(0); }
-  }
+  .bike-marker .bike-frame    { transform: scale(0.30); }
+  .bike-icon-hero .bike-frame { transform: scale(0.42); }
 
   /* ============= DETAIL / EXPANDABLE ============= */
   details.expandable {
@@ -2346,57 +1955,45 @@ function t95Numeric(vinf, m, P, c) {
    Wheel rotation is controlled by JS to keep rolling-without-
    slipping locked to translation:  θ = s / R.
    ============================================================ */
-function cyclistHTML() {
-  return `<div class="bike-stage">
-    <div class="cyclist">
-      <div class="bike">
-        <div class="leftTyre"></div>
-        <div class="rightTyre"></div>
-        <div class="wheel"></div>
-        <div class="pedals"></div>
-        <div class="chain"></div>
-      </div>
-      <div class="girl">
-        <div class="top"></div>
-        <div class="rightArm"></div>
-        <div class="leftArm"></div>
-        <div class="head"></div>
-        <div class="hair"></div>
-        <div class="strap"></div>
-        <div class="trousers">
-          <div class="leftLeg"><div class="leftcalf"></div></div>
-          <div class="rightLeg"><div class="calf"></div></div>
-        </div>
-      </div>
-    </div>
-  </div>`;
+/** Inject one <iframe> per bike container, pointing at bike/embed.html.
+ *  Total CSS isolation — the cyclist renders identically to bike/index.html
+ *  regardless of any global resets on the academic page. */
+function injectBikes() {
+  ['bike-L', 'bike-Q', 'hero-bike'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && !el.querySelector('iframe')) {
+      const iframe = document.createElement('iframe');
+      iframe.className = 'bike-frame';
+      iframe.src = 'bike/embed.html';
+      iframe.setAttribute('scrolling', 'no');
+      iframe.setAttribute('tabindex', '-1');
+      iframe.setAttribute('aria-hidden', 'true');
+      el.appendChild(iframe);
+    }
+  });
 }
 
-/** Rolling-without-slipping wheel rotation.
- *  Given the bike container and screen-pixel distance traveled, set
- *  CSS rotate() on both tyres so θ = s / R radians (no slipping).
- *  Wheel outer radius in original CSS coords = (150 + 2×10)/2 = 85,
- *  scaled by the .bike-stage transform (0.30 sim, 0.42 hero). */
+/** Rolling-without-slipping wheel rotation, reaching into the iframe's
+ *  document to set .leftTyre / .rightTyre transform: rotate(...).
+ *  Wheel outer radius (with border) in iframe-internal CSS pixels = 85,
+ *  scaled down by the .bike-frame transform (0.30 sim, 0.42 hero) to
+ *  give the effective screen-pixel radius. */
 function updateBikeWheels(bikeEl, distancePx) {
   if (!bikeEl) return;
+  const iframe = bikeEl.querySelector('iframe');
+  if (!iframe) return;
+  const doc = iframe.contentDocument;
+  if (!doc) return;  // iframe not yet loaded
+  const tyres = doc.querySelectorAll('.leftTyre, .rightTyre');
+  if (tyres.length === 0) return;
   const isHero = bikeEl.classList.contains('bike-icon-hero');
   const scale = isHero ? 0.42 : 0.3;
   const wheelRadiusPx = 85 * scale;
   if (wheelRadiusPx <= 0) return;
   const angleRad = distancePx / wheelRadiusPx;
   const angleDeg = angleRad * 180 / Math.PI;
-  const tyres = bikeEl.querySelectorAll('.leftTyre, .rightTyre');
-  tyres.forEach(t => { t.style.transform = `rotate(${angleDeg.toFixed(2)}deg)`; });
-}
-
-/** Inject the CSS cyclist DOM into the three host containers. */
-function injectBikes() {
-  ['bike-L', 'bike-Q', 'hero-bike'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el && !el.querySelector('.bike-stage')) {
-      el.innerHTML = cyclistHTML();
-    }
-  });
+  const rot = `rotate(${angleDeg.toFixed(2)}deg)`;
+  tyres.forEach(t => { t.style.transform = rot; });
 }
 
 /** Drive the hero bike: continuous JS-driven motion across the scene,
