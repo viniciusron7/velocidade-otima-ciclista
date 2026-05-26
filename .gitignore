@@ -6,6 +6,10 @@
 # VS Code — Local History extension
 .history/
 
+# Original CSS-cyclist demo folder — no longer referenced from index.html
+# (its style/structure was merged into css/styles.css + js/app.js)
+bike/
+
 # VS Code — workspace settings (optional, comment out if you want to track)
 .vscode/
 
