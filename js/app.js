@@ -869,8 +869,6 @@
         CdA: 0.269,
         P0: 80,
         m: 75,
-        Crr: 0.0032,
-        eta: 0.25,
       };
 
       function updatePractical() {
@@ -878,25 +876,18 @@
         setVal("val-CdA", formatNum(apState.CdA, 3) + " m²");
         setVal("val-P0p", formatNum(apState.P0, 0) + " W");
         setVal("val-mp", formatNum(apState.m, 1) + " kg");
-        setVal("val-Crr", formatNum(apState.Crr, 4));
-        setVal("val-eta", formatNum(apState.eta, 2));
 
         const c = 0.5 * apState.rho * apState.CdA;
-        const Fr = apState.Crr * apState.m * G;
         const vStar = Math.cbrt(apState.P0 / (2 * c));
         const eStar =
           (3 / Math.pow(2, 2 / 3)) *
-            Math.pow(apState.P0, 2 / 3) *
-            Math.pow(c, 1 / 3) +
-          Fr;
-        const eMet = eStar / apState.eta;
+          Math.pow(apState.P0, 2 / 3) *
+          Math.pow(c, 1 / 3);
 
         setVal("ap-vstar", formatNum(vStar, 2) + "  m/s");
         setVal("ap-vstar-kmh", formatNum(vStar * KMH, 1) + " km/h");
         setVal("ap-Emin", formatNum(eStar, 1) + "  J/m");
-        setVal("ap-Emin-met", "metabólico: " + formatNum(eMet, 1) + " J/m");
         setVal("calc-c", formatNum(c, 4));
-        setVal("calc-Fr", formatNum(Fr, 2));
         setVal("calc-v", formatNum(vStar, 3));
 
         const vMin = 0.5,
@@ -904,27 +895,17 @@
         const N = 300;
         const vs = [];
         for (let i = 0; i <= N; i++) vs.push(vMin + (i / N) * (vMax - vMin));
-        const eds = vs.map((v) => apState.P0 / v + Fr + c * v * v);
-        const edsMet = eds.map((e) => e / apState.eta);
+        const eds = vs.map((v) => apState.P0 / v + c * v * v);
 
         const traces = [
           {
             x: vs,
             y: eds,
             mode: "lines",
-            name: "E/d mecânico (J/m)",
+            name: "E/d (J/m)",
             line: { color: COL.accent, width: 2.4 },
             hovertemplate:
               "v = %{x:.2f} m/s<br>E/d = %{y:.2f} J/m<extra></extra>",
-          },
-          {
-            x: vs,
-            y: edsMet,
-            mode: "lines",
-            name: "E/d metabólico (÷η)",
-            line: { color: COL.gold, width: 1.8, dash: "dash" },
-            hovertemplate:
-              "v = %{x:.2f} m/s<br>E_met/d = %{y:.2f} J/m<extra></extra>",
           },
           {
             x: [vStar],
@@ -968,7 +949,7 @@
                 color: COL.text,
               },
             },
-            range: [0, Math.max(eStar * 2.5, eMet * 1.2)],
+            range: [0, eStar * 2.5],
           }),
           legend: Object.assign({}, baseLayout().legend, {
             x: 0.99,
@@ -985,22 +966,18 @@
         });
       }
 
-      ["ap-rho", "ap-CdA", "ap-P0", "ap-m", "ap-Crr", "ap-eta"].forEach(
-        (id) => {
-          document.getElementById(id).addEventListener("input", (e) => {
-            const propMap = {
-              "ap-rho": "rho",
-              "ap-CdA": "CdA",
-              "ap-P0": "P0",
-              "ap-m": "m",
-              "ap-Crr": "Crr",
-              "ap-eta": "eta",
-            };
-            apState[propMap[id]] = parseFloat(e.target.value);
-            updatePractical();
-          });
-        },
-      );
+      ["ap-rho", "ap-CdA", "ap-P0", "ap-m"].forEach((id) => {
+        document.getElementById(id).addEventListener("input", (e) => {
+          const propMap = {
+            "ap-rho": "rho",
+            "ap-CdA": "CdA",
+            "ap-P0": "P0",
+            "ap-m": "m",
+          };
+          apState[propMap[id]] = parseFloat(e.target.value);
+          updatePractical();
+        });
+      });
 
       function positionTip(tip) {
         const owner = tip.parentElement;

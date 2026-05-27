@@ -30,6 +30,7 @@
 <li><a href="#dinamica">Dinâmica</a></li>
 <li><a href="#energia">Energia</a></li>
 <li><a href="#otimo">Velocidade ótima</a></li>
+<li><a href="#protocolo">Protocolo</a></li>
 <li><a href="#sintese">Síntese</a></li>
 </ul>
 </div>
@@ -336,7 +337,57 @@
 </div>
 </div>
 </div>
-<h3><span class="num">B.</span>Leis de escala</h3>
+<h3><span class="num">B.</span>Frenagem por arrasto</h3>
+<p>
+          Um cenário pedagógico instrutivo é o ciclista que deixa de pedalar
+          ($F_{\text{prop}}=0$) e desacelera apenas pelo arrasto. Tomando $v(0)=v_0$
+          e integrando $m\dot v = -D(v)$, obtêm-se soluções fechadas qualitativamente
+          distintas nos dois modelos.
+        </p>
+<div class="grid-2">
+<div class="card linear">
+<span class="badge">Modelo I — coast linear</span>
+<div class="eq-block linear">
+              $$v(t) = v_0\,e^{-t/\tau},\qquad \tau = \frac{m}{b}$$
+            </div>
+<div class="eq-block linear">
+              $$x_\infty = \int_0^{\infty}\! v(t)\,dt = \frac{m\,v_0}{b} = v_0\,\tau$$
+            </div>
+<p>
+              A velocidade tende a zero <em>exponencialmente</em>, mas a distância
+              total percorrida é <strong>finita</strong>. É um paradoxo de Zenão suave:
+              o ciclista nunca para de fato, mas viaja apenas $v_0\,\tau$ além do
+              ponto onde parou de pedalar.
+            </p>
+</div>
+<div class="card quadratic">
+<span class="badge">Modelo II — coast quadrático</span>
+<div class="eq-block quadratic">
+              $$v(t) = \frac{v_0}{1 + (c\,v_0/m)\,t}$$
+            </div>
+<div class="eq-block quadratic">
+              $$x(t) = \frac{m}{c}\,\ln\!\left(1 + \frac{c\,v_0}{m}\,t\right)
+              \;\xrightarrow{\,t\to\infty\,}\; \infty$$
+            </div>
+<p>
+              A velocidade decai apenas como $1/t$ (mais devagar que exponencial), e
+              a distância <strong>diverge logaritmicamente</strong>: não há
+              "distância de parada" — o ciclista continua se deslocando, cada vez
+              mais devagar, indefinidamente.
+            </p>
+</div>
+</div>
+<div class="obs-box">
+<div class="obs-title">Observação 2.1 — Diagnóstico do regime</div>
+<p>
+            Esse contraste oferece um teste experimental nítido: medindo a distância
+            total percorrida em <em>coast-down</em> a partir de uma velocidade $v_0$
+            conhecida, espera-se uma assíntota finita no regime linear e divergência
+            sublinear no regime quadrático. Em ar atmosférico e velocidades típicas,
+            a observação confirma o regime quadrático.
+          </p>
+</div>
+<h3><span class="num">C.</span>Leis de escala</h3>
 <table class="compare">
 <caption>
             Tabela 2.1 — Comparação das escalas características nos dois
@@ -429,6 +480,33 @@
           e cresce com $v$. A competição entre estes dois termos opostos garante,
           pela convexidade, a existência de um mínimo único e interior.
         </p>
+<div class="obs-box result">
+<div class="obs-title">Proposição 3.1 — O ótimo existe e é único</div>
+<p>
+            Para qualquer $P_0 &gt; 0$ e qualquer modelo de arrasto com
+            $P_{\text{ar}}(v)/v$ estritamente crescente em $v$, a função
+            $E/d : (0,\infty) \to \mathbb{R}$ satisfaz:
+          </p>
+<div class="eq-block">
+            $$\lim_{v \to 0^+}\frac{E}{d}(v) = +\infty,
+            \qquad
+            \lim_{v \to \infty}\frac{E}{d}(v) = +\infty,$$
+          </div>
+<div class="eq-block">
+            $$\frac{d^2}{dv^2}\!\left(\frac{E}{d}\right) =
+            \frac{2P_0}{v^3} + P_{\text{ar}}''(v)/v + \cdots \;&gt;\; 0
+            \quad \text{para todo } v &gt; 0.$$
+          </div>
+<p>
+            A primeira condição força $E/d$ para $+\infty$ em ambas as
+            extremidades; a segunda diz que $E/d$ é <strong>estritamente
+            convexa</strong> em $(0,\infty)$. Portanto, o mínimo existe, é
+            único e é <em>interior</em> — não há ambiguidade na definição
+            de $v^*$. Em particular, em ambos os modelos derivados nas
+            seções §III.B e §IV, basta resolver $\frac{d(E/d)}{dv}=0$ para
+            obter $v^*$.
+          </p>
+</div>
 <h3><span class="num">B.</span>Simulação da curva $\frac{E}{d}(v)$</h3>
 <p>
           Os marcadores indicam a velocidade ótima $v^*$ de cada modelo.
@@ -690,6 +768,34 @@
 <strong>Vento a favor</strong> ($v_{\text{vento}} &gt; 0$): $v^*$
               <em>aumenta</em>.
             </p>
+<h4 style="margin-top: 22px">Vento lateral (caso vetorial)</h4>
+<p>
+              Quando o vento não está alinhado com a estrada, a soma deve ser
+              feita vetorialmente:
+            </p>
+<div class="eq-block">
+              $$\vec{v}_{\text{rel}} = \vec{v}_{\text{ciclista}} - \vec{v}_{\text{vento}}
+              \tag{A.4}$$
+            </div>
+<p>
+              Tomando $\phi$ como o ângulo entre o vetor velocidade do ciclista e
+              o vetor velocidade do vento, a lei dos cossenos fornece o módulo
+              da velocidade relativa:
+            </p>
+<div class="eq-block">
+              $$|\vec{v}_{\text{rel}}| = \sqrt{v_{\text{ciclista}}^2 +
+              v_{\text{vento}}^2 - 2\,v_{\text{ciclista}}\,v_{\text{vento}}\cos\phi}
+              \tag{A.5}$$
+            </div>
+<p>
+              O caso alinhado ($\phi = 0$, vento a favor; $\phi = \pi$, vento
+              contra) recupera $|\vec{v}_{\text{rel}}| = |v_{\text{ciclista}}
+              \pm v_{\text{vento}}|$ e portanto as expressões (A.1)–(A.3). Para
+              $\phi = \pi/2$ (vento puramente lateral), o módulo é
+              $\sqrt{v_{\text{ciclista}}^2 + v_{\text{vento}}^2}$ — sempre maior
+              que $v_{\text{ciclista}}$, isto é, vento lateral sempre <em>aumenta</em>
+              o arrasto.
+            </p>
 </div>
 </details>
 </div>
@@ -749,22 +855,6 @@
 <input id="ap-m" max="120" min="40" step="0.5" type="range" value="75"/>
 <span class="tip">Massa total do sistema: ciclista + bicicleta + equipamento. Entra no rolamento ($F_r = C_{rr}\,m\,g$) e na cinética. Ciclismo típico: 70–90 kg (rider 65–80 kg + bike 7–12 kg).</span>
 </div>
-<div class="slider-row">
-<div class="slider-label">
-<span class="label-name">$C_{rr}$ rolamento</span>
-<span class="label-value" id="val-Crr">0.0032</span>
-</div>
-<input id="ap-Crr" max="0.012" min="0" step="0.0001" type="range" value="0.0032"/>
-<span class="tip">Coeficiente adimensional de resistência ao rolamento. Pneu de estrada bom (24–28 mm, alta pressão): $0{,}003$–$0{,}005$. Pneu MTB de cravos: $0{,}010$–$0{,}015$. Asfalto novo melhora; piso de paralelepípedos piora muito.</span>
-</div>
-<div class="slider-row">
-<div class="slider-label">
-<span class="label-name">Eficiência muscular $\eta$</span>
-<span class="label-value" id="val-eta">0.25</span>
-</div>
-<input id="ap-eta" max="0.35" min="0.15" step="0.005" type="range" value="0.25"/>
-<span class="tip">Fração da energia metabólica convertida em trabalho mecânico nas pernas ($E_{\text{mec}} = \eta \cdot E_{\text{metab}}$). Humana típica em cruzeiro: 20–25%. Resto vira calor (por isso o ciclista sua). É como dividimos a energia mecânica calculada para obter a energia metabólica real consumida.</span>
-</div>
 </div>
 </div>
 <div class="plot-area">
@@ -777,7 +867,7 @@
 <div class="headline-stat">
 <div class="h-label">$\frac{E}{d}$ Mínimo</div>
 <div class="h-value accent" id="ap-Emin">—</div>
-<div class="h-sub" id="ap-Emin-met">—</div>
+<div class="h-sub">mecânico, $P_0/v + cv^2$</div>
 </div>
 </div>
 <div id="plot-practical" style="width: 100%; height: 380px"></div>
@@ -785,8 +875,7 @@
 <strong>Cálculos intermediários:</strong>
                 $c = \tfrac12 \rho C_dA = $
                 <span class="mono" id="calc-c">—</span> N·s²/m²  ·
-                $F_r = C_{rr}mg = $ <span class="mono" id="calc-Fr">—</span> N
-                 ·  $v^* = \sqrt[3]{\frac{P_0}{2c}} = $
+                $v^* = \sqrt[3]{\frac{P_0}{2c}} = $
                 <span class="mono" id="calc-v">—</span> m/s
               </div>
 </div>
@@ -795,9 +884,149 @@
 </div>
 </section>
 
+<section class="section" id="protocolo">
+<div class="wrap">
+<h2><span class="num">VI.</span>Protocolo Experimental</h2>
+<p class="lead">
+          A predição central da seção §III é que $E/d(v) = \frac{P_0}{v} + cv^2$
+          possui um mínimo interior em $v^* = \sqrt[3]{\frac{P_0}{2c}}$. Para
+          contrastar esta predição (modelo quadrático) com a do modelo linear
+          $E/d(v) = \frac{P_0}{v} + bv$, podemos coletar dados empíricos de
+          potência mecânica em função da velocidade e ajustar cada modelo. Esta
+          seção propõe um protocolo simples, executável em uma aula prática de
+          Física 1.
+        </p>
+<h3><span class="num">A.</span>Objetivo e materiais</h3>
+<p>
+          Medir, em estrada plana, a relação entre a velocidade $v$ e a potência
+          dissipada $P_{\text{diss}}$, e ajustar os dois modelos:
+        </p>
+<div class="eq-block linear">$$P_{\text{ar}}^{\text{(I)}} = b\,v^2 \tag{6.1}$$</div>
+<div class="eq-block quadratic">$$P_{\text{ar}}^{\text{(II)}} = c\,v^3 \tag{6.2}$$</div>
+<p>
+          Comparando os ajustes, determina-se qual modelo descreve melhor os
+          dados — espera-se, pelo argumento de Reynolds (§I), que seja o
+          quadrático.
+        </p>
+<div class="obs-box">
+<div class="obs-title">Materiais sugeridos</div>
+<ul style="margin: 10px 0 0 22px">
+<li>bicicleta;</li>
+<li>celular com GPS ou ciclocomputador (medir $v$ e $\Delta t$);</li>
+<li>sensor de velocidade na roda (opcional, mais preciso que GPS);</li>
+<li>anemômetro portátil (opcional, para medir $v_{\text{rel}}$);</li>
+<li>fita métrica ou trena;</li>
+<li>balança (para medir massa total ciclista + bicicleta);</li>
+<li>trecho plano, reto e seguro, com pelo menos 100 m;</li>
+<li>planilha para registrar dados.</li>
+</ul>
+</div>
+<h3><span class="num">B.</span>Procedimento</h3>
+<ol style="margin-left: 22px">
+<li>Escolher um trecho plano e reto, idealmente em horário sem vento.</li>
+<li>
+            Medir a massa total $m$ (ciclista + bicicleta) na balança e a
+            distância $d$ do trecho com trena/GPS.
+          </li>
+<li>
+            Pedalar o trecho em ritmos constantes diferentes — por exemplo
+            $\sim$10, 15, 20, 25 e 30 km/h —, registrando o tempo $\Delta t$ em
+            cada tentativa.
+          </li>
+<li>
+            Repetir cada velocidade <strong>pelo menos 3 vezes</strong> e em
+            <strong>ambos os sentidos</strong> do trecho, para cancelar o efeito
+            de vento residual.
+          </li>
+<li>
+            Calcular $v = d/\Delta t$ (velocidade média), e estimar a potência
+            mecânica usando o modelo completo:
+            $P_{\text{mec}} = P_{\text{ar}} + P_{\text{rolamento}}$.
+          </li>
+</ol>
+<h3><span class="num">C.</span>Tabela de dados</h3>
+<table class="compare">
+<caption>Tabela 6.1 — Modelo de planilha para registro</caption>
+<thead>
+<tr>
+<th>Teste</th>
+<th>$d$ (m)</th>
+<th>$\Delta t$ (s)</th>
+<th>$v$ (m/s)</th>
+<th>$v_{\text{rel}}$ (m/s)</th>
+<th>$P_{\text{ar}}$ (W)</th>
+<th>$P_{\text{rol}}$ (W)</th>
+<th>$P_{\text{total}}$ (W)</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>2</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>3</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>4</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>5</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+</tbody>
+</table>
+<p>
+          Para preencher a tabela, aplique:
+          $P_{\text{ar}} = \tfrac12\rho C_dA\,v_{\text{rel}}^2\,v$ (modelo
+          quadrático),
+          $P_{\text{rol}} = C_{rr}mg\,v$, e
+          $P_{\text{total}} = P_{\text{ar}} + P_{\text{rol}}$. Se não houver
+          anemômetro, use $v_{\text{rel}} \approx v$ (sem vento).
+        </p>
+<h3><span class="num">D.</span>Comparando os modelos</h3>
+<p>
+          Com os pontos $(v_i, P_{\text{ar},i})$ em mãos, faça <em>dois
+          gráficos</em>:
+        </p>
+<div class="grid-2">
+<div class="card linear">
+<span class="badge">Teste do modelo I</span>
+<p>Plote $P_{\text{ar}}$ contra $v^2$.</p>
+<div class="eq-block linear">
+              $$P_{\text{ar}}^{\text{(I)}} = b\,v^2$$
+            </div>
+<p>
+              Se os pontos formam uma <strong>reta passando pela origem</strong>,
+              o modelo linear é compatível e o coeficiente angular dá $b$.
+            </p>
+</div>
+<div class="card quadratic">
+<span class="badge">Teste do modelo II</span>
+<p>Plote $P_{\text{ar}}$ contra $v^3$.</p>
+<div class="eq-block quadratic">
+              $$P_{\text{ar}}^{\text{(II)}} = c\,v^3$$
+            </div>
+<p>
+              Se os pontos formam uma <strong>reta passando pela origem</strong>,
+              o modelo quadrático é compatível e o coeficiente angular dá $c$.
+            </p>
+</div>
+</div>
+<p>
+          Em geral, o modelo correto produz $R^2$ mais próximo de 1 e resíduos
+          sem padrão sistemático. Em ar e velocidades de estrada, espera-se que
+          o modelo quadrático vença o linear por margem confortável.
+        </p>
+<div class="obs-box result">
+<div class="obs-title">Observação 6.1 — Conexão com a teoria</div>
+<p>
+            O coeficiente $c$ obtido pelo ajuste pode ser comparado com a
+            previsão teórica $c_{\text{teo}} = \tfrac12\rho C_dA$, usando
+            $\rho = 1{,}225$ kg/m³ e uma estimativa de $C_dA$ para a postura
+            adotada. Concordância dentro de $\pm 20\%$ é considerada excelente
+            para um experimento didático. Substituindo o $c$ medido em
+            $v^* = \sqrt[3]{P_0/(2c)}$ obtém-se uma estimativa da velocidade
+            ótima personalizada do/a ciclista.
+          </p>
+</div>
+</div>
+</section>
+
 <section class="section" id="sintese">
 <div class="wrap">
-<h2><span class="num">VI.</span>Síntese</h2>
+<h2><span class="num">VII.</span>Síntese</h2>
 <p class="lead">
           Os dois modelos fornecem soluções analíticas elegantes — um
           exponencial, o outro hiperbólico — mas levam a previsões
