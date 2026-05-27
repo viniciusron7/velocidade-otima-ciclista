@@ -837,14 +837,13 @@
         position: relative;
       }
       .tip {
-        display: none;
         position: fixed;
         top: var(--tip-top, -9999px);
-        left: var(--tip-left, 50vw);
-        transform: translate(-50%, 6px) scale(0.985);
-        transform-origin: 50% 100%;
+        left: var(--tip-left, -9999px);
+        transform: translateX(6px) scale(0.985);
+        transform-origin: 100% 50%;
         width: max-content;
-        max-width: var(--tip-max-width, min(360px, calc(100vw - 32px)));
+        max-width: var(--tip-max-width, min(300px, calc(100vw - 32px)));
         background: var(--ink);
         color: var(--paper);
         padding: 12px 16px;
@@ -874,29 +873,29 @@
       .tip::before {
         content: "";
         position: absolute;
-        top: 100%;
-        left: 50%;
-        transform: translateX(-50%);
+        top: 50%;
+        left: 100%;
+        transform: translateY(-50%);
         border: 7px solid transparent;
-        border-top-color: var(--ink);
+        border-left-color: var(--ink);
       }
-      .tip.tip-below {
-        transform-origin: 50% 0;
+      .tip.tip-right {
+        transform: translateX(-6px) scale(0.985);
+        transform-origin: 0% 50%;
       }
-      .tip.tip-below::before {
-        top: auto;
-        bottom: 100%;
-        border-top-color: transparent;
-        border-bottom-color: var(--ink);
+      .tip.tip-right::before {
+        left: auto;
+        right: 100%;
+        border-left-color: transparent;
+        border-right-color: var(--ink);
       }
       .slider-row:hover > .tip,
       .toggle-btn:hover > .tip,
       .slider-row:focus-within > .tip,
       .toggle-btn:focus-within > .tip {
-        display: block;
         opacity: 1;
         visibility: visible;
-        transform: translate(-50%, 0) scale(1);
+        transform: translateX(0) scale(1);
         transition:
           opacity 0.26s cubic-bezier(0.16, 1, 0.3, 1) 0.18s,
           transform 0.26s cubic-bezier(0.16, 1, 0.3, 1) 0.18s,

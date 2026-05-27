@@ -984,26 +984,41 @@
         if (!owner) return;
         const margin = 16;
         const gap = 12;
-        const maxWidth = Math.max(
-          240,
-          Math.min(360, window.innerWidth - margin * 2),
-        );
+        const maxWidth = Math.min(300, window.innerWidth - margin * 2);
         tip.style.setProperty("--tip-max-width", maxWidth + "px");
 
-        const ownerRect = owner.getBoundingClientRect();
-        const center = ownerRect.left + ownerRect.width / 2;
-        const left = Math.min(
-          window.innerWidth - margin - maxWidth / 2,
-          Math.max(margin + maxWidth / 2, center),
-        );
-        tip.style.setProperty("--tip-left", left + "px");
+        const tipRect = tip.getBoundingClientRect();
+        const tipWidth = tipRect.width;
+        const tipHeight = tipRect.height;
 
-        const tipHeight = tip.getBoundingClientRect().height;
-        let top = ownerRect.top - tipHeight - gap;
-        const below = top < margin;
-        if (below) top = ownerRect.bottom + gap;
-        tip.classList.toggle("tip-below", below);
+        const ownerRect = owner.getBoundingClientRect();
+
+        let left = ownerRect.left - gap - tipWidth;
+        let placement = "left";
+
+        if (left < margin) {
+          const rightCandidate = ownerRect.right + gap;
+          if (rightCandidate + tipWidth <= window.innerWidth - margin) {
+            left = rightCandidate;
+            placement = "right";
+          } else if (ownerRect.left >= window.innerWidth - ownerRect.right) {
+            left = margin;
+            placement = "left";
+          } else {
+            left = window.innerWidth - margin - tipWidth;
+            placement = "right";
+          }
+        }
+
+        let top = ownerRect.top + ownerRect.height / 2 - tipHeight / 2;
+        if (top < margin) top = margin;
+        if (top + tipHeight > window.innerHeight - margin) {
+          top = window.innerHeight - margin - tipHeight;
+        }
+
+        tip.style.setProperty("--tip-left", left + "px");
         tip.style.setProperty("--tip-top", top + "px");
+        tip.classList.toggle("tip-right", placement === "right");
       }
 
       function positionActiveTips() {
