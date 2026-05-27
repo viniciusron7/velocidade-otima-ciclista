@@ -1149,6 +1149,54 @@
         opacity: 0.8;
       }
 
+      .play-pause-btn {
+        position: absolute;
+        top: 10px;
+        left: 12px;
+        z-index: 6;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-family: "Inter", sans-serif;
+        font-size: 0.74rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 5px 11px 5px 10px;
+        background: rgba(255, 255, 255, 0.92);
+        border: 1px solid var(--rule);
+        border-radius: 3px;
+        color: var(--ink);
+        cursor: pointer;
+        transition:
+          background 0.18s ease,
+          border-color 0.18s ease,
+          color 0.18s ease,
+          transform 0.12s ease;
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        box-shadow: var(--shadow-sm);
+        user-select: none;
+      }
+      .play-pause-btn:hover {
+        background: var(--card);
+        border-color: var(--ink-mute);
+      }
+      .play-pause-btn:active {
+        transform: scale(0.97);
+      }
+      .play-pause-btn .pp-icon {
+        display: inline-block;
+        width: 12px;
+        text-align: center;
+        font-size: 0.8em;
+        color: var(--green);
+        transition: color 0.18s ease;
+      }
+      .play-pause-btn:not(.paused) .pp-icon {
+        color: var(--quadratic);
+      }
+
       .sim-wind {
         position: absolute;
         height: 2px;

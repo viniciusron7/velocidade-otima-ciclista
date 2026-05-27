@@ -296,6 +296,7 @@
 </div>
 <div class="plot-area">
 <div class="bike-canvas-wrap split">
+<button aria-label="Play/Pause animação" aria-pressed="false" class="play-pause-btn paused" id="playPauseBtn" type="button"><span class="pp-icon">▶</span><span class="pp-label">Play</span></button>
 <div class="scale-marker" id="scale-marker">0 m</div>
 <span class="lane-label quadratic">Mod. II</span>
 <span class="lane-label linear">Mod. I</span>
@@ -389,14 +390,7 @@
           distância é simplesmente a força de arrasto integrada:
         </p>
 <div class="eq-block">
-          $$\begin{aligned}
-          \frac{dE_{\text{diss}}}{dx} &amp;= F_{\text{ar}}(v),\\
-          \frac{E_{\text{diss}}}{d} &amp;=
-          \begin{cases}
-          b\,v, &amp; \text{linear},\\
-          c\,v^2, &amp; \text{quadrático}.
-          \end{cases}
-          \end{aligned}\tag{3.1}$$
+          $$\frac{dE_{\text{diss}}}{dx} = F_{\text{ar}}(v) \quad\Longrightarrow\quad \frac{E_{\text{diss}}}{d} = bv \;\text{(linear)} \;\;\text{ou}\;\; cv^2 \;\text{(quadrático)} \tag{3.1}$$
         </div>
 <div class="obs-box warn">
 <div class="obs-title">
@@ -428,18 +422,13 @@
           energia metabólica por metro — é então:
         </p>
 <div class="eq-block gold">
-          $$\begin{aligned}
-          \frac{E}{d}(v)
-          &amp;= \frac{P_{\text{total}}(v)}{v}\\
-          &amp;=
-          \underbrace{\frac{P_0}{v}}_{\substack{\text{custo de tempo}\\\text{decresce com }1/v}}\\
-          &amp;\quad+
-          \underbrace{\frac{P_{\text{ar}}(v)}{v}}_{\substack{\text{custo aerodinâmico}\\\text{cresce com }v}}.
-          \end{aligned}\tag{3.3}$$
+          $$\frac{E}{d}(v) = \frac{P_{\text{total}}(v)}{v} = \frac{P_0}{v} + \frac{P_{\text{ar}}(v)}{v} \tag{3.3}$$
         </div>
 <p>
-          Esta função tem a estrutura clássica de competição entre dois termos.
-          Sua convexidade garante a existência de um mínimo único e interior.
+          O primeiro termo, $P_0/v$, é o <em>custo de tempo</em> e decresce com
+          $1/v$; o segundo, $P_{\text{ar}}(v)/v$, é o <em>custo aerodinâmico</em>
+          e cresce com $v$. A competição entre estes dois termos opostos garante,
+          pela convexidade, a existência de um mínimo único e interior.
         </p>
 <h3><span class="num">3.2</span>Simulação da curva $E/d(v)$</h3>
 <p>

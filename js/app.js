@@ -115,19 +115,45 @@
         });
       }
 
+      const animState = {
+        paused: true,
+        dynElapsed: 0,
+        heroElapsed: 0,
+        lastDynFrameTime: null,
+        lastHeroFrameTime: null,
+      };
+
+      function setPaused(paused) {
+        if (animState.paused === paused) return;
+        animState.paused = paused;
+        animState.lastDynFrameTime = null;
+        animState.lastHeroFrameTime = null;
+        const btn = document.getElementById("playPauseBtn");
+        if (!btn) return;
+        btn.classList.toggle("paused", paused);
+        btn.setAttribute("aria-pressed", paused ? "false" : "true");
+        const icon = btn.querySelector(".pp-icon");
+        const label = btn.querySelector(".pp-label");
+        if (icon) icon.textContent = paused ? "▶" : "❚❚";
+        if (label) label.textContent = paused ? "Play" : "Pause";
+      }
+
       function animateHeroBike() {
         const bike = document.getElementById("hero-bike");
         if (!bike) return;
         const scene = bike.parentElement;
         if (!scene) return;
         const cycleMs = 8500;
-        let startTime = null;
 
         function frame(now) {
-          if (startTime === null) startTime = now;
-          const elapsed = (now - startTime) % cycleMs;
-          const frac = elapsed / cycleMs;
+          if (animState.lastHeroFrameTime !== null && !animState.paused) {
+            animState.heroElapsed =
+              (animState.heroElapsed + (now - animState.lastHeroFrameTime)) %
+              cycleMs;
+          }
+          animState.lastHeroFrameTime = now;
 
+          const frac = animState.heroElapsed / cycleMs;
           const sceneW = scene.clientWidth;
           const bikeW = bike.clientWidth || 160;
           const startX = -bikeW - 8;
@@ -458,13 +484,21 @@
 
         if (dynState._raf) cancelAnimationFrame(dynState._raf);
 
+        animState.dynElapsed = 0;
+        animState.lastDynFrameTime = null;
+
         const duration = 6500;
-        const start = performance.now();
         const ts = data.ts;
 
         function frame(now) {
-          const elapsed = (now - start) % duration;
-          const frac = elapsed / duration;
+          if (animState.lastDynFrameTime !== null && !animState.paused) {
+            animState.dynElapsed =
+              (animState.dynElapsed + (now - animState.lastDynFrameTime)) %
+              duration;
+          }
+          animState.lastDynFrameTime = now;
+
+          const frac = animState.dynElapsed / duration;
           const idx = Math.min(
             ts.length - 1,
             Math.floor(frac * (ts.length - 1)),
@@ -513,6 +547,7 @@
         const el = document.getElementById(id);
         el.addEventListener("input", (e) => {
           dynState[prop] = parseFloat(e.target.value);
+          setPaused(true);
           updateDynamics();
         });
       }
@@ -529,6 +564,7 @@
         document.getElementById("modePower").classList.remove("active");
         document.getElementById("rowF").style.display = "";
         document.getElementById("rowP").style.display = "none";
+        setPaused(true);
         updateDynamics();
       });
       document.getElementById("modePower").addEventListener("click", () => {
@@ -537,8 +573,16 @@
         document.getElementById("modeForce").classList.remove("active");
         document.getElementById("rowF").style.display = "none";
         document.getElementById("rowP").style.display = "";
+        setPaused(true);
         updateDynamics();
       });
+
+      const playPauseBtn = document.getElementById("playPauseBtn");
+      if (playPauseBtn) {
+        playPauseBtn.addEventListener("click", () => {
+          setPaused(!animState.paused);
+        });
+      }
 
       document.querySelectorAll(".plot-tab").forEach((btn) => {
         btn.addEventListener("click", () => {
