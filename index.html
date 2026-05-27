@@ -146,34 +146,32 @@
 <div class="card linear">
 <span class="badge">Modelo I — $F$ constante</span>
 <div class="eq-block linear">
-              $$m\frac{dv}{dt} = F_0 - b\,v \tag{2.1}$$
+              $$m\frac{dv}{dt} = F_0 - b\,v$$
             </div>
 <p style="font-style: normal; color: var(--ink-soft)">
               Solução com $v(0) = 0$:
             </p>
 <div class="eq-block linear">
               $$v(t) = v_\infty\left(1 - e^{-t/\tau}\right),\quad \tau =
-              \frac{m}{b} \tag{2.2}$$
+              \frac{m}{b}$$
             </div>
 <div class="eq-block linear">
-              $$x(t) = v_\infty\,t - v_\infty\tau\bigl(1 - e^{-t/\tau}\bigr)
-              \tag{2.3}$$
+              $$x(t) = v_\infty\,t - v_\infty\tau\bigl(1 - e^{-t/\tau}\bigr)$$
             </div>
 </div>
 <div class="card quadratic">
 <span class="badge">Modelo II — $F$ constante</span>
 <div class="eq-block quadratic">
-              $$m\frac{dv}{dt} = F_0 - c\,v^2 \tag{2.4}$$
+              $$m\frac{dv}{dt} = F_0 - c\,v^2$$
             </div>
 <p style="font-style: normal; color: var(--ink-soft)">
               Solução com $v(0) = 0$:
             </p>
 <div class="eq-block quadratic">
-              $$v(t) = v_\infty\tanh\!\left(\tfrac{t}{\tau}\right),\;\; \tau = \frac{m}{cv_\infty}
-              \tag{2.5}$$
+              $$v(t) = v_\infty\tanh\!\left(\tfrac{t}{\tau}\right),\;\; \tau = \frac{m}{cv_\infty}$$
             </div>
 <div class="eq-block quadratic">
-              $$x(t) = v_\infty\tau\,\ln\!\bigl[\cosh\!\left(\tfrac{t}{\tau}\right)\bigr] \tag{2.6}$$
+              $$x(t) = v_\infty\tau\,\ln\!\bigl[\cosh\!\left(\tfrac{t}{\tau}\right)\bigr]$$
             </div>
 </div>
 </div>
@@ -440,7 +438,7 @@
           distância é simplesmente a força de arrasto integrada:
         </p>
 <div class="eq-block">
-          $$\frac{dE_{\text{diss}}}{dx} = F_{\text{ar}}(v) \quad\Longrightarrow\quad \frac{E_{\text{diss}}}{d} = bv \;\text{(linear)} \;\;\text{ou}\;\; cv^2 \;\text{(quadrático)} \tag{3.1}$$
+          $$\frac{dE_{\text{diss}}}{dx} = F_{\text{ar}}(v) \quad\Longrightarrow\quad \frac{E_{\text{diss}}}{d} = bv \;\text{(linear)} \;\;\text{ou}\;\; cv^2 \;\text{(quadrático)}$$
         </div>
 <div class="obs-box warn">
 <div class="obs-title">
@@ -465,14 +463,14 @@
           velocidade. A potência total é
         </p>
 <div class="eq-block">
-          $$P_{\text{total}}(v) = P_0 + P_{\text{ar}}(v) \tag{3.2}$$
+          $$P_{\text{total}}(v) = P_0 + P_{\text{ar}}(v)$$
         </div>
 <p>
           O <em>Custo de Transporte</em> (Cost of Transport, COT) — a
           energia metabólica por metro — é então:
         </p>
 <div class="eq-block gold">
-          $$\frac{E}{d}(v) = \frac{P_{\text{total}}(v)}{v} = \frac{P_0}{v} + \frac{P_{\text{ar}}(v)}{v} \tag{3.3}$$
+          $$\frac{E}{d}(v) = \frac{P_{\text{total}}(v)}{v} = \frac{P_0}{v} + \frac{P_{\text{ar}}(v)}{v}$$
         </div>
 <p>
           O primeiro termo, $\frac{P_0}{v}$, é o <em>custo de tempo</em> e decresce com
@@ -503,11 +501,11 @@
             convexa</strong> em $(0,\infty)$. Portanto, o mínimo existe, é
             único e é <em>interior</em> — não há ambiguidade na definição
             de $v^*$. Em particular, em ambos os modelos derivados nas
-            seções §III.B e §IV, basta resolver $\frac{d(E/d)}{dv}=0$ para
+            seções <a href="#energia-simulacao" class="sec-ref">III.B</a> e <a href="#otimo" class="sec-ref">IV</a>, basta resolver $\frac{d(E/d)}{dv}=0$ para
             obter $v^*$.
           </p>
 </div>
-<h3><span class="num">B.</span>Simulação da curva $\frac{E}{d}(v)$</h3>
+<h3 id="energia-simulacao"><span class="num">B.</span>Simulação da curva $\frac{E}{d}(v)$</h3>
 <p>
           Os marcadores indicam a velocidade ótima $v^*$ de cada modelo.
           Desative o termo $\frac{P_0}{v}$ para visualizar como o ótimo desaparece no
@@ -750,16 +748,15 @@
               relativa:
             </p>
 <div class="eq-block">
-              $$v_{\text{rel}} = v - v_{\text{vento}} \tag{A.1}$$
+              $$v_{\text{rel}} = v - v_{\text{vento}}$$
             </div>
 <p>A energia por distância no modelo quadrático torna-se:</p>
 <div class="eq-block">
-              $$\frac{E}{d} = \frac{P_0}{v} + F_r + c(v - v_{\text{vento}})^2
-              \tag{A.2}$$
+              $$\frac{E}{d} = \frac{P_0}{v} + F_r + c(v - v_{\text{vento}})^2$$
             </div>
 <p>A condição de otimalidade leva a uma equação cúbica:</p>
 <div class="eq-block">
-              $$2c\,v^2 (v - v_{\text{vento}}) = P_0 \tag{A.3}$$
+              $$2c\,v^2 (v - v_{\text{vento}}) = P_0$$
             </div>
 <p>
 <strong>Vento contra</strong> ($v_{\text{vento}} &lt; 0$): $v^*$
@@ -773,8 +770,7 @@
               feita vetorialmente:
             </p>
 <div class="eq-block">
-              $$\vec{v}_{\text{rel}} = \vec{v}_{\text{ciclista}} - \vec{v}_{\text{vento}}
-              \tag{A.4}$$
+              $$\vec{v}_{\text{rel}} = \vec{v}_{\text{ciclista}} - \vec{v}_{\text{vento}}$$
             </div>
 <p>
               Tomando $\phi$ como o ângulo entre o vetor velocidade do ciclista e
@@ -783,8 +779,7 @@
             </p>
 <div class="eq-block">
               $$|\vec{v}_{\text{rel}}| = \sqrt{v_{\text{ciclista}}^2 +
-              v_{\text{vento}}^2 - 2\,v_{\text{ciclista}}\,v_{\text{vento}}\cos\phi}
-              \tag{A.5}$$
+              v_{\text{vento}}^2 - 2\,v_{\text{ciclista}}\,v_{\text{vento}}\cos\phi}$$
             </div>
 <p>
               O caso alinhado ($\phi = 0$, vento a favor; $\phi = \pi$, vento
@@ -887,7 +882,7 @@
 <div class="wrap">
 <h2><span class="num">VI.</span>Protocolo Experimental</h2>
 <p class="lead">
-          A predição central da seção §III é que $E/d(v) = \frac{P_0}{v} + cv^2$
+          A predição central da <a href="#energia" class="sec-ref">seção III</a> é que $E/d(v) = \frac{P_0}{v} + cv^2$
           possui um mínimo interior em $v^* = \sqrt[3]{\frac{P_0}{2c}}$. Para
           contrastar esta predição (modelo quadrático) com a do modelo linear
           $E/d(v) = \frac{P_0}{v} + bv$, podemos coletar dados empíricos de
@@ -900,11 +895,11 @@
           Medir, em estrada plana, a relação entre a velocidade $v$ e a potência
           dissipada $P_{\text{diss}}$, e ajustar os dois modelos:
         </p>
-<div class="eq-block linear">$$P_{\text{ar}}^{\text{(I)}} = b\,v^2 \tag{6.1}$$</div>
-<div class="eq-block quadratic">$$P_{\text{ar}}^{\text{(II)}} = c\,v^3 \tag{6.2}$$</div>
+<div class="eq-block linear">$$P_{\text{ar}}^{\text{(I)}} = b\,v^2$$</div>
+<div class="eq-block quadratic">$$P_{\text{ar}}^{\text{(II)}} = c\,v^3$$</div>
 <p>
           Comparando os ajustes, determina-se qual modelo descreve melhor os
-          dados — espera-se, pelo argumento de Reynolds (§I), que seja o
+          dados — espera-se, pelo argumento de Reynolds (<a href="#modelos" class="sec-ref">seção I</a>), que seja o
           quadrático.
         </p>
 <div class="obs-box">
