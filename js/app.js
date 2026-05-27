@@ -118,16 +118,13 @@
       const animState = {
         paused: true,
         dynElapsed: 0,
-        heroElapsed: 0,
         lastDynFrameTime: null,
-        lastHeroFrameTime: null,
       };
 
       function setPaused(paused) {
         if (animState.paused === paused) return;
         animState.paused = paused;
         animState.lastDynFrameTime = null;
-        animState.lastHeroFrameTime = null;
         const btn = document.getElementById("playPauseBtn");
         if (!btn) return;
         btn.classList.toggle("paused", paused);
@@ -144,16 +141,13 @@
         const scene = bike.parentElement;
         if (!scene) return;
         const cycleMs = 8500;
+        let startTime = null;
 
         function frame(now) {
-          if (animState.lastHeroFrameTime !== null && !animState.paused) {
-            animState.heroElapsed =
-              (animState.heroElapsed + (now - animState.lastHeroFrameTime)) %
-              cycleMs;
-          }
-          animState.lastHeroFrameTime = now;
+          if (startTime === null) startTime = now;
+          const elapsed = (now - startTime) % cycleMs;
+          const frac = elapsed / cycleMs;
 
-          const frac = animState.heroElapsed / cycleMs;
           const sceneW = scene.clientWidth;
           const bikeW = bike.clientWidth || 160;
           const startX = -bikeW - 8;

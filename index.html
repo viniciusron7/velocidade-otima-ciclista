@@ -78,11 +78,10 @@
 
 <section class="section" id="modelos">
 <div class="wrap">
-<h2><span class="num">1.</span>Os Dois Modelos de Arrasto</h2>
+<h2><span class="num">I.</span>Os Dois Modelos de Arrasto</h2>
 <p class="lead">
           A força de arrasto que o ar exerce sobre o ciclista depende do regime
-          de escoamento, caracterizado pelo número de Reynolds $\mathrm{Re} =
-          \rho v L / \mu$. Para um ciclista típico, $\mathrm{Re} \sim 10^5$, no
+          de escoamento, caracterizado pelo número de Reynolds $\mathrm{Re} = \frac{\rho v L}{\mu}$. Para um ciclista típico, $\mathrm{Re} \sim 10^5$, no
           regime turbulento. Mesmo assim, é instrutivo comparar os dois modelos
           canônicos da mecânica clássica.
         </p>
@@ -97,7 +96,7 @@
 <div class="eq-block linear">$$F_{\text{ar}} = -b\,v$$</div>
 <ul>
 <li>Potência dissipada: $P = bv^2$</li>
-<li>Velocidade terminal (com $F$ const.): $v_\infty = F/b$</li>
+<li>Velocidade terminal (com $F$ const.): $v_\infty = \frac{F}{b}$</li>
 <li>Solução temporal: <em>exponencial</em></li>
 </ul>
 </div>
@@ -114,7 +113,7 @@
             </div>
 <ul>
 <li>Potência dissipada: $P = cv^3$</li>
-<li>Velocidade terminal: $v_\infty = \sqrt{F/c}$</li>
+<li>Velocidade terminal: $v_\infty = \sqrt{\frac{F}{c}}$</li>
 <li>Solução temporal: <em>tangente hiperbólica</em></li>
 </ul>
 </div>
@@ -134,7 +133,7 @@
 
 <section class="section" id="dinamica">
 <div class="wrap">
-<h2><span class="num">2.</span>Modelagem de $v(t)$ e $x(t)$</h2>
+<h2><span class="num">II.</span>Modelagem de $v(t)$ e $x(t)$</h2>
 <p class="lead">
           A segunda lei de Newton fornece $m\dot v = F_{\text{prop}} -
           F_{\text{ar}}$, uma EDO de primeira ordem em ambos os modelos. As
@@ -169,22 +168,22 @@
               Solução com $v(0) = 0$:
             </p>
 <div class="eq-block quadratic">
-              $$v(t) = v_\infty\tanh(t/\tau),\;\; \tau = \frac{m}{cv_\infty}
+              $$v(t) = v_\infty\tanh\!\left(\tfrac{t}{\tau}\right),\;\; \tau = \frac{m}{cv_\infty}
               \tag{2.5}$$
             </div>
 <div class="eq-block quadratic">
-              $$x(t) = v_\infty\tau\,\ln\!\bigl[\cosh(t/\tau)\bigr] \tag{2.6}$$
+              $$x(t) = v_\infty\tau\,\ln\!\bigl[\cosh\!\left(\tfrac{t}{\tau}\right)\bigr] \tag{2.6}$$
             </div>
 </div>
 </div>
 <h3 style="margin-top: 38px">
-<span class="num">2.1</span>Simulação numérica
+<span class="num">A.</span>Simulação numérica
         </h3>
 <p>
           Ajuste a massa, a força propulsora e os coeficientes de arrasto, e
           observe em tempo real a evolução de $v(t)$ e $x(t)$ em ambos os
           modelos. Os parâmetros padrão correspondem a um ciclista típico: $m =
-          75$ kg, $c \approx 0{,}165\,\text{N}\,\text{s}^2/\text{m}^2$ (com
+          75$ kg, $c \approx 0{,}165\,\frac{\text{N}\,\text{s}^2}{\text{m}^2}$ (com
           $C_dA = 0{,}269\,\text{m}^2$ e $\rho = 1{,}225\,\text{kg/m}^3$).
         </p>
 <div class="simulator">
@@ -209,7 +208,7 @@
 <span class="label-value" id="val-m">75 kg</span>
 </div>
 <input id="sl-m" max="120" min="40" step="0.5" type="range" value="75"/>
-<span class="tip">Massa combinada do ciclista + bicicleta + equipamento. Entra na segunda lei de Newton ($F = ma$) e define a escala temporal $\tau = m/b$. Ciclismo típico: 70–90 kg.</span>
+<span class="tip">Massa combinada do ciclista + bicicleta + equipamento. Entra na segunda lei de Newton ($F = ma$) e define a escala temporal $\tau = \frac{m}{b}$. Ciclismo típico: 70–90 kg.</span>
 </div>
 <div class="slider-row" id="rowF">
 <div class="slider-label">
@@ -337,7 +336,7 @@
 </div>
 </div>
 </div>
-<h3><span class="num">2.2</span>Leis de escala</h3>
+<h3><span class="num">B.</span>Leis de escala</h3>
 <table class="compare">
 <caption>
             Tabela 2.1 — Comparação das escalas características nos dois
@@ -353,13 +352,13 @@
 <tbody>
 <tr>
 <td class="feature">$v_\infty$ com força $F$</td>
-<td>$F/b \propto F$</td>
-<td>$\sqrt{F/c} \propto F^{1/2}$</td>
+<td>$\frac{F}{b} \propto F$</td>
+<td>$\sqrt{\frac{F}{c}} \propto F^{1/2}$</td>
 </tr>
 <tr>
 <td class="feature">$v_\infty$ com potência $P$</td>
-<td>$\sqrt{P/b} \propto P^{1/2}$</td>
-<td>$(P/c)^{1/3} \propto P^{1/3}$</td>
+<td>$\sqrt{\frac{P}{b}} \propto P^{1/2}$</td>
+<td>$\left(\frac{P}{c}\right)^{1/3} \propto P^{1/3}$</td>
 </tr>
 <tr>
 <td class="feature">Potência dissipada</td>
@@ -369,12 +368,12 @@
 <tr>
 <td class="feature">Forma de $v(t)$</td>
 <td>exponencial: $1 - e^{-t/\tau}$</td>
-<td>hiperbólica: $\tanh(t/\tau)$</td>
+<td>hiperbólica: $\tanh\!\left(\tfrac{t}{\tau}\right)$</td>
 </tr>
 <tr>
 <td class="feature">Forma de $x(t)$</td>
 <td>$v_\infty t - v_\infty\tau(1-e^{-t/\tau})$</td>
-<td>$v_\infty\tau\,\ln\cosh(t/\tau)$</td>
+<td>$v_\infty\tau\,\ln\cosh\!\left(\tfrac{t}{\tau}\right)$</td>
 </tr>
 </tbody>
 </table>
@@ -383,7 +382,7 @@
 
 <section class="section" id="energia">
 <div class="wrap">
-<h2><span class="num">3.</span>Energia por Distância $E/d$</h2>
+<h2><span class="num">III.</span>Energia por Distância $\frac{E}{d}$</h2>
 <p class="lead">
           A pergunta central é: qual velocidade minimiza a energia gasta por
           metro percorrido? Em regime estacionário, a energia dissipada por
@@ -399,14 +398,14 @@
 <p>
             Ambas as funções $bv$ e $cv^2$ são
             <em>estritamente crescentes</em> em $v$. Logo, no modelo puramente
-            mecânico, o mínimo de $E/d$ ocorre em $v \to 0$ — pedalar
+            mecânico, o mínimo de $\frac{E}{d}$ ocorre em $v \to 0$ — pedalar
             arbitrariamente devagar minimiza o gasto por metro. Esse resultado é
             matematicamente correto, porém operacionalmente inútil. Para que
             surja um ótimo realista, é necessário incluir um
             <em>custo por unidade de tempo</em>.
           </p>
 </div>
-<h3><span class="num">3.1</span>O custo metabólico basal</h3>
+<h3><span class="num">A.</span>O custo metabólico basal</h3>
 <p>
           O corpo humano consome energia mesmo em repouso: taxa metabólica
           basal, manutenção da postura, equilíbrio sobre a bicicleta, trabalho
@@ -425,15 +424,15 @@
           $$\frac{E}{d}(v) = \frac{P_{\text{total}}(v)}{v} = \frac{P_0}{v} + \frac{P_{\text{ar}}(v)}{v} \tag{3.3}$$
         </div>
 <p>
-          O primeiro termo, $P_0/v$, é o <em>custo de tempo</em> e decresce com
-          $1/v$; o segundo, $P_{\text{ar}}(v)/v$, é o <em>custo aerodinâmico</em>
+          O primeiro termo, $\frac{P_0}{v}$, é o <em>custo de tempo</em> e decresce com
+          $\frac{1}{v}$; o segundo, $\frac{P_{\text{ar}}(v)}{v}$, é o <em>custo aerodinâmico</em>
           e cresce com $v$. A competição entre estes dois termos opostos garante,
           pela convexidade, a existência de um mínimo único e interior.
         </p>
-<h3><span class="num">3.2</span>Simulação da curva $E/d(v)$</h3>
+<h3><span class="num">B.</span>Simulação da curva $\frac{E}{d}(v)$</h3>
 <p>
           Os marcadores indicam a velocidade ótima $v^*$ de cada modelo.
-          Desative o termo $P_0/v$ para visualizar como o ótimo desaparece no
+          Desative o termo $\frac{P_0}{v}$ para visualizar como o ótimo desaparece no
           limite puramente mecânico.
         </p>
 <div class="simulator">
@@ -451,7 +450,7 @@
 <span class="label-value gold" id="val-P0">80 W</span>
 </div>
 <input id="en-P0" max="200" min="0" step="1" type="range" value="80"/>
-<span class="tip">Custo metabólico aproximadamente constante por unidade de tempo: BMR + postura + equilíbrio + trabalho interno dos membros. É o termo $P_0/v$ em $E/d$ que faz aparecer o mínimo (sem ele, a velocidade ótima tende a zero). Estimado em 60–100 W para ciclismo recreativo.</span>
+<span class="tip">Custo metabólico aproximadamente constante por unidade de tempo: BMR + postura + equilíbrio + trabalho interno dos membros. É o termo $\frac{P_0}{v}$ em $\frac{E}{d}$ que faz aparecer o mínimo (sem ele, a velocidade ótima tende a zero). Estimado em 60–100 W para ciclismo recreativo.</span>
 </div>
 <div class="slider-row">
 <div class="slider-label">
@@ -459,7 +458,7 @@
 <span class="label-value linear" id="val-bE">1.32 N·s/m</span>
 </div>
 <input id="en-b" max="6.0" min="0.1" step="0.01" type="range" value="1.32"/>
-<span class="tip">Constante do arrasto linear de Stokes ($F = bv$). Aqui altera a curva azul de $E/d$ e desloca $v^*_{\text{lin}} = \sqrt{P_0/b}$. Sensibilidade: $v^* \propto b^{-1/2}$.</span>
+<span class="tip">Constante do arrasto linear de Stokes ($F = bv$). Aqui altera a curva azul de $\frac{E}{d}$ e desloca $v^*_{\text{lin}} = \sqrt{\frac{P_0}{b}}$. Sensibilidade: $v^* \propto b^{-1/2}$.</span>
 </div>
 <div class="slider-row">
 <div class="slider-label">
@@ -467,7 +466,7 @@
 <span class="label-value quadratic" id="val-cE">0.165 N·s²/m²</span>
 </div>
 <input id="en-c" max="0.6" min="0.02" step="0.005" type="range" value="0.165"/>
-<span class="tip">Constante do arrasto quadrático ($F = cv^2$). Altera a curva bordô de $E/d$ e desloca $v^*_{\text{quad}} = \sqrt[3]{P_0/(2c)}$. Sensibilidade: $v^* \propto c^{-1/3}$ — bem menor que no linear, explicando por que ciclistas adotam velocidades de cruzeiro parecidas mesmo com fisiologias diferentes.</span>
+<span class="tip">Constante do arrasto quadrático ($F = cv^2$). Altera a curva bordô de $\frac{E}{d}$ e desloca $v^*_{\text{quad}} = \sqrt[3]{\frac{P_0}{2c}}$. Sensibilidade: $v^* \propto c^{-1/3}$ — bem menor que no linear, explicando por que ciclistas adotam velocidades de cruzeiro parecidas mesmo com fisiologias diferentes.</span>
 </div>
 <div class="slider-row">
 <div class="slider-label">
@@ -475,15 +474,15 @@
 <span class="label-value" id="val-Fr">2.35 N</span>
 </div>
 <input id="en-Fr" max="10" min="0" step="0.05" type="range" value="2.35"/>
-<span class="tip">Resistência de rolamento dos pneus contra o asfalto: $F_r = C_{rr}\,m\,g$. Termo constante em $E/d$ (independe de $v$) — desloca a curva verticalmente mas NÃO muda a posição da velocidade ótima $v^*$. Bike de estrada: 2–3 N. MTB em terra: 8–15 N.</span>
+<span class="tip">Resistência de rolamento dos pneus contra o asfalto: $F_r = C_{rr}\,m\,g$. Termo constante em $\frac{E}{d}$ (independe de $v$) — desloca a curva verticalmente mas NÃO muda a posição da velocidade ótima $v^*$. Bike de estrada: 2–3 N. MTB em terra: 8–15 N.</span>
 </div>
 </div>
 <div class="control-group">
 <h4>Curvas exibidas</h4>
 <div class="toggle-row" style="flex-direction: column; gap: 6px">
-<button class="toggle-btn active linear" id="toggleLin">Modelo I linear<span class="tip">Mostra/oculta a curva $E/d$ do modelo de arrasto LINEAR ($F = bv$). Mínimo em $v^* = \sqrt{P_0/b}$.</span></button>
-<button class="toggle-btn active quadratic" id="toggleQuad">Modelo II quadrático<span class="tip">Mostra/oculta a curva $E/d$ do modelo de arrasto QUADRÁTICO ($F = cv^2$) — fisicamente correto para ciclismo. Mínimo em $v^* = \sqrt[3]{P_0/(2c)}$.</span></button>
-<button class="toggle-btn active gold" id="toggleP0">Termo $P_0/v$<span class="tip">Liga/desliga o termo $P_0/v$ em $E/d(v)$. LIGADO: aparece um mínimo interior ($v^*$ finito). DESLIGADO: $E/d$ é monotonicamente crescente — o ótimo fica em $v \to 0^+$, fisicamente inútil. Demonstra por que o custo basal é essencial.</span></button>
+<button class="toggle-btn active linear" id="toggleLin">Modelo I linear<span class="tip">Mostra/oculta a curva $\frac{E}{d}$ do modelo de arrasto LINEAR ($F = bv$). Mínimo em $v^* = \sqrt{\frac{P_0}{b}}$.</span></button>
+<button class="toggle-btn active quadratic" id="toggleQuad">Modelo II quadrático<span class="tip">Mostra/oculta a curva $\frac{E}{d}$ do modelo de arrasto QUADRÁTICO ($F = cv^2$) — fisicamente correto para ciclismo. Mínimo em $v^* = \sqrt[3]{\frac{P_0}{2c}}$.</span></button>
+<button class="toggle-btn active gold" id="toggleP0">Termo $\frac{P_0}{v}$<span class="tip">Liga/desliga o termo $\frac{P_0}{v}$ em $\frac{E}{d}(v)$. LIGADO: aparece um mínimo interior ($v^*$ finito). DESLIGADO: $\frac{E}{d}$ é monotonicamente crescente — o ótimo fica em $v \to 0^+$, fisicamente inútil. Demonstra por que o custo basal é essencial.</span></button>
 </div>
 </div>
 <div class="control-group">
@@ -498,11 +497,11 @@
 <div class="stat-value" id="opt-vQ">— m/s</div>
 </div>
 <div class="stat linear">
-<div class="stat-label">$E/d$ no $v^*$</div>
+<div class="stat-label">$\frac{E}{d}$ no $v^*$</div>
 <div class="stat-value" id="opt-EL">— J/m</div>
 </div>
 <div class="stat quadratic">
-<div class="stat-label">$E/d$ no $v^*$</div>
+<div class="stat-label">$\frac{E}{d}$ no $v^*$</div>
 <div class="stat-value" id="opt-EQ">— J/m</div>
 </div>
 </div>
@@ -524,9 +523,9 @@
 <div id="plot-energy" style="width: 100%; height: 540px"></div>
 <p class="figure-caption" style="margin-top: 12px">
 <span class="label">Figura 3.1.</span>
-                Curvas de $E/d$ em função da velocidade. O ponto mais baixo de
+                Curvas de $\frac{E}{d}$ em função da velocidade. O ponto mais baixo de
                 cada curva, marcado em <span class="text-gold">âmbar</span>, é a
-                velocidade ótima $v^*$. Desligando $P_0/v$, vê-se que o ótimo do
+                velocidade ótima $v^*$. Desligando $\frac{P_0}{v}$, vê-se que o ótimo do
                 modelo mecânico puro está em $v \to 0$.
               </p>
 </div>
@@ -535,7 +534,7 @@
 <details class="expandable">
 <summary>Derivação detalhada da velocidade ótima</summary>
 <div class="body">
-<h4>Caso linear — $E/d = P_0/v + bv$</h4>
+<h4>Caso linear — $\frac{E}{d} = \frac{P_0}{v} + bv$</h4>
 <div class="derivation-step">
 <span class="step-num">i</span>
               Funcional a minimizar: $$\frac{E}{d}(v) = \frac{P_0}{v} + bv$$
@@ -547,20 +546,20 @@
             </div>
 <div class="derivation-step">
 <span class="step-num">iii</span>
-              Igualando a zero: $-P_0/v^2 + b = 0 \;\Rightarrow\; v^2 = P_0/b$
+              Igualando a zero: $-\frac{P_0}{v^2} + b = 0 \;\Rightarrow\; v^2 = \frac{P_0}{b}$
             </div>
 <div class="derivation-step last">
 <span class="step-num">iv</span>
               Resultado: $$\boxed{\;v^*_{\text{lin}} =
-              \sqrt{\frac{P_0}{b}}\;}\quad\text{(mínimo, pois } 2P_0/v^3 &gt;
+              \sqrt{\frac{P_0}{b}}\;}\quad\text{(mínimo, pois } \tfrac{2P_0}{v^3} &gt;
               0\text{)}$$
             </div>
 <p style="margin-top: 18px">
-<em>Equilíbrio no ótimo (caso linear):</em> $P_0/v^* = bv^*$
+<em>Equilíbrio no ótimo (caso linear):</em> $\frac{P_0}{v^*} = bv^*$
               — no mínimo, o gasto basal por metro é exatamente igual ao
               gasto aerodinâmico por metro, na proporção <strong>1:1</strong>.
             </p>
-<h4>Caso quadrático — $E/d = P_0/v + cv^2$</h4>
+<h4>Caso quadrático — $\frac{E}{d} = \frac{P_0}{v} + cv^2$</h4>
 <div class="derivation-step">
 <span class="step-num">i</span>
               Funcional a minimizar: $$\frac{E}{d}(v) = \frac{P_0}{v} + cv^2$$
@@ -572,7 +571,7 @@
             </div>
 <div class="derivation-step">
 <span class="step-num">iii</span>
-              Igualando a zero: $2cv = P_0/v^2 \;\Rightarrow\; v^3 = P_0/(2c)$
+              Igualando a zero: $2cv = \frac{P_0}{v^2} \;\Rightarrow\; v^3 = \frac{P_0}{2c}$
             </div>
 <div class="derivation-step last">
 <span class="step-num">iv</span>
@@ -587,8 +586,8 @@
               está limitado mais pelo metabolismo basal do que pelo arrasto.
             </p>
 <p>
-<em>Caso geral:</em> para $f(v) = A/v + Bv^n$, no mínimo o termo
-              $Bv^n$ tem peso $1/n$ em relação ao termo $A/v$.
+<em>Caso geral:</em> para $f(v) = \frac{A}{v} + Bv^n$, no mínimo o termo
+              $Bv^n$ tem peso $\frac{1}{n}$ em relação ao termo $\frac{A}{v}$.
             </p>
 </div>
 </details>
@@ -597,7 +596,7 @@
 
 <section class="section" id="otimo">
 <div class="wrap">
-<h2><span class="num">4.</span>Análise da Velocidade Ótima</h2>
+<h2><span class="num">IV.</span>Análise da Velocidade Ótima</h2>
 <p class="lead">
           Os dois modelos predizem a existência de um ótimo interno — mas
           com escalas qualitativamente distintas em relação aos parâmetros
@@ -607,14 +606,14 @@
 <div class="grid-2">
 <div class="card linear">
 <span class="badge">Modelo I</span>
-<h3>$v^*_{\text{lin}} = \sqrt{P_0/b}$</h3>
+<h3>$v^*_{\text{lin}} = \sqrt{\frac{P_0}{b}}$</h3>
 <ul>
 <li>
                 Escala com $P_0$: $\;v^* \propto P_0^{1/2}$ (raiz quadrada)
               </li>
 <li>Escala com $b$: $\;v^* \propto b^{-1/2}$</li>
 <li>
-                Custo mínimo: $\;\left(E/d\right)_{\min} = 2\sqrt{P_0\,b}$
+                Custo mínimo: $\;\left(\frac{E}{d}\right)_{\min} = 2\sqrt{P_0\,b}$
               </li>
 <li>
                 Equilíbrio basal : aerodinâmico no ótimo — <em>1 : 1</em>
@@ -623,12 +622,12 @@
 </div>
 <div class="card quadratic">
 <span class="badge">Modelo II</span>
-<h3>$v^*_{\text{quad}} = \sqrt[3]{P_0/(2c)}$</h3>
+<h3>$v^*_{\text{quad}} = \sqrt[3]{\frac{P_0}{2c}}$</h3>
 <ul>
 <li>Escala com $P_0$: $\;v^* \propto P_0^{1/3}$ (raiz cúbica)</li>
 <li>Escala com $c$: $\;v^* \propto c^{-1/3}$</li>
 <li>
-                Custo mínimo: $\;\left(E/d\right)_{\min} = \dfrac{3}{2^{2/3}}
+                Custo mínimo: $\;\left(\frac{E}{d}\right)_{\min} = \dfrac{3}{2^{2/3}}
                 P_0^{2/3} c^{1/3}$
               </li>
 <li>
@@ -655,7 +654,7 @@
           </p>
 </div>
 <h3 style="margin-top: 36px">
-<span class="num">4.1</span>Escala de $v^*$ versus $P_0$
+<span class="num">A.</span>Escala de $v^*$ versus $P_0$
         </h3>
 <div class="plot-area" style="padding: 22px">
 <div id="plot-scaling" style="width: 100%; height: 460px"></div>
@@ -698,7 +697,7 @@
 
 <section class="section" id="aplicacao">
 <div class="wrap">
-<h2><span class="num">5.</span>Calculadora Prática</h2>
+<h2><span class="num">V.</span>Calculadora Prática</h2>
 <p class="lead">
           Inserindo valores típicos de um caso real e usando o modelo quadrático
           — o realista para ciclismo — obtém-se a velocidade ótima
@@ -740,7 +739,7 @@
 <span class="label-value gold" id="val-P0p">80 W</span>
 </div>
 <input id="ap-P0" max="250" min="20" step="1" type="range" value="80"/>
-<span class="tip">Custo metabólico aproximadamente constante por unidade de tempo: BMR + postura + equilíbrio + trabalho interno dos membros. É o termo que faz aparecer um mínimo no $E/d(v)$. Recreativo: 60–100 W. Profissional: 100–150 W.</span>
+<span class="tip">Custo metabólico aproximadamente constante por unidade de tempo: BMR + postura + equilíbrio + trabalho interno dos membros. É o termo que faz aparecer um mínimo no $\frac{E}{d}(v)$. Recreativo: 60–100 W. Profissional: 100–150 W.</span>
 </div>
 <div class="slider-row">
 <div class="slider-label">
@@ -776,7 +775,7 @@
 <div class="h-sub" id="ap-vstar-kmh">—</div>
 </div>
 <div class="headline-stat">
-<div class="h-label">$E/d$ Mínimo</div>
+<div class="h-label">$\frac{E}{d}$ Mínimo</div>
 <div class="h-value accent" id="ap-Emin">—</div>
 <div class="h-sub" id="ap-Emin-met">—</div>
 </div>
@@ -787,7 +786,7 @@
                 $c = \tfrac12 \rho C_dA = $
                 <span class="mono" id="calc-c">—</span> N·s²/m²  ·
                 $F_r = C_{rr}mg = $ <span class="mono" id="calc-Fr">—</span> N
-                 ·  $v^* = \sqrt[3]{P_0/(2c)} = $
+                 ·  $v^* = \sqrt[3]{\frac{P_0}{2c}} = $
                 <span class="mono" id="calc-v">—</span> m/s
               </div>
 </div>
@@ -798,7 +797,7 @@
 
 <section class="section" id="sintese">
 <div class="wrap">
-<h2><span class="num">6.</span>Síntese</h2>
+<h2><span class="num">VI.</span>Síntese</h2>
 <p class="lead">
           Os dois modelos fornecem soluções analíticas elegantes — um
           exponencial, o outro hiperbólico — mas levam a previsões
@@ -831,12 +830,12 @@
 <tr>
 <td class="feature">$v(t)$ com força const.</td>
 <td>$v_\infty(1 - e^{-t/\tau})$</td>
-<td>$v_\infty\,\tanh(t/\tau)$</td>
+<td>$v_\infty\,\tanh\!\left(\tfrac{t}{\tau}\right)$</td>
 </tr>
 <tr>
 <td class="feature">$x(t)$ com força const.</td>
 <td>$v_\infty t - v_\infty\tau(1-e^{-t/\tau})$</td>
-<td>$v_\infty\tau\,\ln\cosh(t/\tau)$</td>
+<td>$v_\infty\tau\,\ln\cosh\!\left(\tfrac{t}{\tau}\right)$</td>
 </tr>
 <tr>
 <td class="feature">Potência dissipada</td>
@@ -844,14 +843,14 @@
 <td>$P = cv^3$</td>
 </tr>
 <tr>
-<td class="feature">$E/d$ mecânico</td>
+<td class="feature">$\frac{E}{d}$ mecânico</td>
 <td>$bv$ (cresce linearmente)</td>
 <td>$cv^2$ (cresce quadraticamente)</td>
 </tr>
 <tr>
 <td class="feature">Velocidade ótima (com $P_0$)</td>
-<td>$v^* = \sqrt{P_0/b}$</td>
-<td>$v^* = \sqrt[3]{P_0/(2c)}$</td>
+<td>$v^* = \sqrt{\frac{P_0}{b}}$</td>
+<td>$v^* = \sqrt[3]{\frac{P_0}{2c}}$</td>
 </tr>
 <tr>
 <td class="feature">Sensibilidade a $P_0$</td>
@@ -877,9 +876,9 @@
             </li>
 <li>
               Para arrasto <span class="text-linear">linear</span>:
-              $v^*_{\text{lin}} = \sqrt{P_0/b}$. Para arrasto
+              $v^*_{\text{lin}} = \sqrt{\frac{P_0}{b}}$. Para arrasto
               <span class="text-quadratic">quadrático</span> (fisicamente
-              correto): $v^*_{\text{quad}} = \sqrt[3]{P_0/(2c)}$.
+              correto): $v^*_{\text{quad}} = \sqrt[3]{\frac{P_0}{2c}}$.
             </li>
 <li>
               O modelo quadrático prevê velocidades ótimas
@@ -896,7 +895,7 @@
 </ol>
 </div>
 <h3 style="margin-top: 40px">
-<span class="num">6.1</span>Fórmulas principais
+<span class="num">A.</span>Fórmulas principais
         </h3>
 <div class="grid-2">
 <div class="card linear">
@@ -915,7 +914,7 @@
 <div class="card quadratic">
 <span class="badge">Modelo II — resumo</span>
 <div class="eq-block quadratic">
-              $$v(t) = v_\infty\tanh(t/\tau),\;\; \tau = \frac{m}{cv_\infty}$$
+              $$v(t) = v_\infty\tanh\!\left(\tfrac{t}{\tau}\right),\;\; \tau = \frac{m}{cv_\infty}$$
             </div>
 <div class="eq-block quadratic">
               $$v_\infty^{(F)} = \sqrt{\frac{F}{c}},\quad v_\infty^{(P)} =
