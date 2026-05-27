@@ -26,11 +26,11 @@
 </div>
 <ul>
 <li><a href="#abstract">Introdução</a></li>
-<li><a href="#modelos">§1 Modelos</a></li>
-<li><a href="#dinamica">§2 Dinâmica</a></li>
-<li><a href="#energia">§3 Energia</a></li>
-<li><a href="#otimo">§4 Velocidade ótima</a></li>
-<li><a href="#sintese">§5 Síntese</a></li>
+<li><a href="#modelos">Modelos</a></li>
+<li><a href="#dinamica">Dinâmica</a></li>
+<li><a href="#energia">Energia</a></li>
+<li><a href="#otimo">Velocidade ótima</a></li>
+<li><a href="#sintese">Síntese</a></li>
 </ul>
 </div>
 </nav>
@@ -78,7 +78,7 @@
 
 <section class="section" id="modelos">
 <div class="wrap">
-<h2><span class="num">§ 1.</span>Os Dois Modelos de Arrasto</h2>
+<h2><span class="num">1.</span>Os Dois Modelos de Arrasto</h2>
 <p class="lead">
           A força de arrasto que o ar exerce sobre o ciclista depende do regime
           de escoamento, caracterizado pelo número de Reynolds $\mathrm{Re} =
@@ -134,7 +134,7 @@
 
 <section class="section" id="dinamica">
 <div class="wrap">
-<h2><span class="num">§ 2.</span>Modelagem de $v(t)$ e $x(t)$</h2>
+<h2><span class="num">2.</span>Modelagem de $v(t)$ e $x(t)$</h2>
 <p class="lead">
           A segunda lei de Newton fornece $m\dot v = F_{\text{prop}} -
           F_{\text{ar}}$, uma EDO de primeira ordem em ambos os modelos. As
@@ -197,57 +197,59 @@
 <div class="control-group">
 <h4>Modo de controle</h4>
 <div class="toggle-row">
-<button class="toggle-btn active" data-mode="F" data-tooltip="Cenário A: o ciclista aplica força constante F₀ nos pedais. EDO linear (mv̇ = F₀ − D(v)) com soluções exponencial ou tangente hiperbólica. Idealização útil para análise mas pouco realista." id="modeForce">
-                    Força const.
-                  </button>
-<button class="toggle-btn" data-mode="P" data-tooltip="Cenário B: o ciclista mantém potência mecânica P constante. Reflete como medidores de potência operam. EDO singular em v=0 — toma-se v₀ → 0⁺. É o modo dominante na literatura moderna de ciclismo." id="modePower">
-                    Potência const.
-                  </button>
+<button class="toggle-btn active" data-mode="F" id="modeForce">Força const.<span class="tip">Cenário A: o ciclista aplica força constante $F_0$ nos pedais. EDO linear ($m\dot v = F_0 - D(v)$) com soluções exponencial ou tangente hiperbólica. Idealização útil para análise mas pouco realista.</span></button>
+<button class="toggle-btn" data-mode="P" id="modePower">Potência const.<span class="tip">Cenário B: o ciclista mantém potência mecânica $P$ constante. Reflete como medidores de potência operam. EDO singular em $v=0$ — toma-se $v_0 \to 0^+$. É o modo dominante na literatura moderna de ciclismo.</span></button>
 </div>
 </div>
 <div class="control-group">
 <h4>Parâmetros do ciclista</h4>
-<div class="slider-row" data-tooltip="Massa combinada do ciclista + bicicleta + equipamento. Entra na 2ª lei de Newton (F = m·a) e define a escala temporal τ = m/b. Ciclismo típico: 70–90 kg.">
+<div class="slider-row">
 <div class="slider-label">
 <span class="label-name">Massa total $m$</span>
 <span class="label-value" id="val-m">75 kg</span>
 </div>
 <input id="sl-m" max="120" min="40" step="0.5" type="range" value="75"/>
+<span class="tip">Massa combinada do ciclista + bicicleta + equipamento. Entra na segunda lei de Newton ($F = ma$) e define a escala temporal $\tau = m/b$. Ciclismo típico: 70–90 kg.</span>
 </div>
-<div class="slider-row" data-tooltip="Força propulsora constante aplicada pelo ciclista. Modo idealizado — em prática controlamos potência, não força. Em cruzeiro: 10–30 N. Valores típicos no exemplo numérico: F₀ ≈ 18 N." id="rowF">
+<div class="slider-row" id="rowF">
 <div class="slider-label">
 <span class="label-name">Força propulsora $F_0$</span>
 <span class="label-value" id="val-F">18 N</span>
 </div>
 <input id="sl-F" max="60" min="2" step="0.5" type="range" value="18"/>
+<span class="tip">Força propulsora constante aplicada pelo ciclista. Modo idealizado — em prática controlamos potência, não força. Em cruzeiro: 10–30 N. Valores típicos no exemplo numérico: $F_0 \approx 18$ N.</span>
 </div>
-<div class="slider-row" data-tooltip="Potência mecânica entregue às rodas. Modo realista — medidores de potência (powermeters) medem exatamente isso. Cruzeiro recreativo: 150–250 W. Limiar funcional (FTP): 280–350 W. Sprint: &gt;800 W." id="rowP" style="display: none">
+<div class="slider-row" id="rowP" style="display: none">
 <div class="slider-label">
 <span class="label-name">Potência mecânica $P$</span>
 <span class="label-value" id="val-P">250 W</span>
 </div>
 <input id="sl-P" max="600" min="40" step="5" type="range" value="250"/>
+<span class="tip">Potência mecânica entregue às rodas. Modo realista — medidores de potência (powermeters) medem exatamente isso. Cruzeiro recreativo: 150–250 W. Limiar funcional (FTP): 280–350 W. Sprint: $&gt;800$ W.</span>
 </div>
-<div class="slider-row" data-tooltip="Constante do arrasto linear de Stokes (F = b·v). Fisicamente válido apenas para Re ≪ 1 (e.g., partícula em fluido viscoso). Em ciclismo entra como exercício didático — não é realista para velocidades de estrada.">
+<div class="slider-row">
 <div class="slider-label">
 <span class="label-name">Coef. linear $b$</span>
 <span class="label-value linear" id="val-b">1.32 N·s/m</span>
 </div>
 <input id="sl-b" max="6.0" min="0.1" step="0.01" type="range" value="1.32"/>
+<span class="tip">Constante do arrasto linear de Stokes ($F = bv$). Fisicamente válido apenas para $\mathrm{Re} \ll 1$ (e.g., partícula em fluido viscoso). Em ciclismo entra como exercício didático — não é realista para velocidades de estrada.</span>
 </div>
-<div class="slider-row" data-tooltip="Constante do arrasto quadrático de Newton (F = c·v²), com c = ½·ρ·Cd·A. Regime fisicamente correto para ciclismo (Re ~ 10⁵, escoamento turbulento). Ciclista típico em postura de estrada: c ≈ 0.15–0.25 N·s²/m².">
+<div class="slider-row">
 <div class="slider-label">
 <span class="label-name">Coef. quadrático $c$</span>
 <span class="label-value quadratic" id="val-c">0.165 N·s²/m²</span>
 </div>
 <input id="sl-c" max="0.6" min="0.02" step="0.005" type="range" value="0.165"/>
+<span class="tip">Constante do arrasto quadrático de Newton ($F = cv^2$), com $c = \tfrac12 \rho C_d A$. Regime fisicamente correto para ciclismo ($\mathrm{Re} \sim 10^5$, escoamento turbulento). Ciclista típico em postura de estrada: $c \approx 0{,}15$–$0{,}25$ N·s²/m².</span>
 </div>
-<div class="slider-row" data-tooltip="Duração da simulação no eixo t dos gráficos. Aumente para ver o regime estacionário (v → v∞); diminua para focar na fase transitória inicial onde o arrasto ainda é pequeno e v(t) ~ √t no modo potência.">
+<div class="slider-row">
 <div class="slider-label">
 <span class="label-name">Tempo de simulação</span>
 <span class="label-value" id="val-tmax">120 s</span>
 </div>
 <input id="sl-tmax" max="400" min="20" step="5" type="range" value="120"/>
+<span class="tip">Duração da simulação no eixo $t$ dos gráficos. Aumente para ver o regime estacionário ($v \to v_\infty$); diminua para focar na fase transitória inicial onde o arrasto ainda é pequeno e $v(t) \sim \sqrt{t}$ no modo potência.</span>
 </div>
 </div>
 <div class="control-group">
@@ -380,16 +382,21 @@
 
 <section class="section" id="energia">
 <div class="wrap">
-<h2><span class="num">§ 3.</span>Energia por Distância $E/d$</h2>
+<h2><span class="num">3.</span>Energia por Distância $E/d$</h2>
 <p class="lead">
           A pergunta central é: qual velocidade minimiza a energia gasta por
           metro percorrido? Em regime estacionário, a energia dissipada por
           distância é simplesmente a força de arrasto integrada:
         </p>
 <div class="eq-block">
-          $$\frac{dE_{\text{diss}}}{dx} = F_{\text{ar}}(v) \;\Longrightarrow\;
-          \frac{E_{\text{diss}}}{d} = \begin{cases} b\,v &amp; \text{linear} \\
-          c\,v^2 &amp; \text{quadrático} \end{cases} \tag{3.1}$$
+          $$\begin{aligned}
+          \frac{dE_{\text{diss}}}{dx} &amp;= F_{\text{ar}}(v),\\
+          \frac{E_{\text{diss}}}{d} &amp;=
+          \begin{cases}
+          b\,v, &amp; \text{linear},\\
+          c\,v^2, &amp; \text{quadrático}.
+          \end{cases}
+          \end{aligned}\tag{3.1}$$
         </div>
 <div class="obs-box warn">
 <div class="obs-title">
@@ -421,11 +428,14 @@
           energia metabólica por metro — é então:
         </p>
 <div class="eq-block gold">
-          $$\frac{E}{d}(v) = \frac{P_{\text{total}}(v)}{v} =
-          \underbrace{\frac{P_0}{v}}_{\substack{\text{custo de
-          tempo}\\\text{decresce com }1/v}} +
-          \underbrace{P_{\text{ar}}(v)/v}_{\substack{\text{custo
-          aerodinâmico}\\\text{cresce com }v}} \tag{3.3}$$
+          $$\begin{aligned}
+          \frac{E}{d}(v)
+          &amp;= \frac{P_{\text{total}}(v)}{v}\\
+          &amp;=
+          \underbrace{\frac{P_0}{v}}_{\substack{\text{custo de tempo}\\\text{decresce com }1/v}}\\
+          &amp;\quad+
+          \underbrace{\frac{P_{\text{ar}}(v)}{v}}_{\substack{\text{custo aerodinâmico}\\\text{cresce com }v}}.
+          \end{aligned}\tag{3.3}$$
         </div>
 <p>
           Esta função tem a estrutura clássica de competição entre dois termos.
@@ -446,47 +456,45 @@
 <div class="controls">
 <div class="control-group">
 <h4>Parâmetros físicos</h4>
-<div class="slider-row" data-tooltip="Custo metabólico aproximadamente constante por unidade de tempo: BMR + postura + equilíbrio + trabalho interno dos membros. É o termo P₀/v em E/d que faz aparecer o mínimo (sem ele, a velocidade ótima 'tende a zero'). Estimado em 60–100 W para ciclismo recreativo.">
+<div class="slider-row">
 <div class="slider-label">
 <span class="label-name">Potência basal $P_0$</span>
 <span class="label-value gold" id="val-P0">80 W</span>
 </div>
 <input id="en-P0" max="200" min="0" step="1" type="range" value="80"/>
+<span class="tip">Custo metabólico aproximadamente constante por unidade de tempo: BMR + postura + equilíbrio + trabalho interno dos membros. É o termo $P_0/v$ em $E/d$ que faz aparecer o mínimo (sem ele, a velocidade ótima tende a zero). Estimado em 60–100 W para ciclismo recreativo.</span>
 </div>
-<div class="slider-row" data-tooltip="Constante do arrasto linear de Stokes (F = b·v). Aqui altera a curva azul de E/d e desloca v*_linear = √(P₀/b). Sensibilidade: v* ∝ b⁻¹/².">
+<div class="slider-row">
 <div class="slider-label">
 <span class="label-name">Coef. linear $b$</span>
 <span class="label-value linear" id="val-bE">1.32 N·s/m</span>
 </div>
 <input id="en-b" max="6.0" min="0.1" step="0.01" type="range" value="1.32"/>
+<span class="tip">Constante do arrasto linear de Stokes ($F = bv$). Aqui altera a curva azul de $E/d$ e desloca $v^*_{\text{lin}} = \sqrt{P_0/b}$. Sensibilidade: $v^* \propto b^{-1/2}$.</span>
 </div>
-<div class="slider-row" data-tooltip="Constante do arrasto quadrático (F = c·v²). Altera a curva bordô de E/d e desloca v*_quad = ∛(P₀/(2c)). Sensibilidade: v* ∝ c⁻¹/³ — bem menor que no linear, explicando por que ciclistas adotam velocidades de cruzeiro parecidas mesmo com fisiologias diferentes.">
+<div class="slider-row">
 <div class="slider-label">
 <span class="label-name">Coef. quadrático $c$</span>
 <span class="label-value quadratic" id="val-cE">0.165 N·s²/m²</span>
 </div>
 <input id="en-c" max="0.6" min="0.02" step="0.005" type="range" value="0.165"/>
+<span class="tip">Constante do arrasto quadrático ($F = cv^2$). Altera a curva bordô de $E/d$ e desloca $v^*_{\text{quad}} = \sqrt[3]{P_0/(2c)}$. Sensibilidade: $v^* \propto c^{-1/3}$ — bem menor que no linear, explicando por que ciclistas adotam velocidades de cruzeiro parecidas mesmo com fisiologias diferentes.</span>
 </div>
-<div class="slider-row" data-tooltip="Resistência de rolamento dos pneus contra o asfalto: F_r = C_rr · m · g. Termo constante em E/d (independe de v) — desloca a curva verticalmente mas NÃO muda a posição da velocidade ótima v*. Bike de estrada: 2–3 N. MTB em terra: 8–15 N.">
+<div class="slider-row">
 <div class="slider-label">
 <span class="label-name">Rolamento $F_r$</span>
 <span class="label-value" id="val-Fr">2.35 N</span>
 </div>
 <input id="en-Fr" max="10" min="0" step="0.05" type="range" value="2.35"/>
+<span class="tip">Resistência de rolamento dos pneus contra o asfalto: $F_r = C_{rr}\,m\,g$. Termo constante em $E/d$ (independe de $v$) — desloca a curva verticalmente mas NÃO muda a posição da velocidade ótima $v^*$. Bike de estrada: 2–3 N. MTB em terra: 8–15 N.</span>
 </div>
 </div>
 <div class="control-group">
 <h4>Curvas exibidas</h4>
 <div class="toggle-row" style="flex-direction: column; gap: 6px">
-<button class="toggle-btn active linear" data-tooltip="Mostra/oculta a curva E/d do modelo de arrasto LINEAR (F = b·v). Mínimo em v* = √(P₀/b)." id="toggleLin">
-                    Modelo I linear
-                  </button>
-<button class="toggle-btn active quadratic" data-tooltip="Mostra/oculta a curva E/d do modelo de arrasto QUADRÁTICO (F = c·v²) — fisicamente correto para ciclismo. Mínimo em v* = ∛(P₀/(2c))." id="toggleQuad">
-                    Modelo II quadrático
-                  </button>
-<button class="toggle-btn active gold" data-tooltip="Liga/desliga o termo P₀/v em E/d(v). LIGADO: aparece um mínimo interior (v* finito). DESLIGADO: E/d é monotonicamente crescente — o 'ótimo' fica em v → 0⁺, fisicamente inútil. Demonstra por que o custo basal é essencial." id="toggleP0">
-                    Termo $P_0/v$
-                  </button>
+<button class="toggle-btn active linear" id="toggleLin">Modelo I linear<span class="tip">Mostra/oculta a curva $E/d$ do modelo de arrasto LINEAR ($F = bv$). Mínimo em $v^* = \sqrt{P_0/b}$.</span></button>
+<button class="toggle-btn active quadratic" id="toggleQuad">Modelo II quadrático<span class="tip">Mostra/oculta a curva $E/d$ do modelo de arrasto QUADRÁTICO ($F = cv^2$) — fisicamente correto para ciclismo. Mínimo em $v^* = \sqrt[3]{P_0/(2c)}$.</span></button>
+<button class="toggle-btn active gold" id="toggleP0">Termo $P_0/v$<span class="tip">Liga/desliga o termo $P_0/v$ em $E/d(v)$. LIGADO: aparece um mínimo interior ($v^*$ finito). DESLIGADO: $E/d$ é monotonicamente crescente — o ótimo fica em $v \to 0^+$, fisicamente inútil. Demonstra por que o custo basal é essencial.</span></button>
 </div>
 </div>
 <div class="control-group">
@@ -600,7 +608,7 @@
 
 <section class="section" id="otimo">
 <div class="wrap">
-<h2><span class="num">§ 4.</span>Análise da Velocidade Ótima</h2>
+<h2><span class="num">4.</span>Análise da Velocidade Ótima</h2>
 <p class="lead">
           Os dois modelos predizem a existência de um ótimo interno — mas
           com escalas qualitativamente distintas em relação aos parâmetros
@@ -701,7 +709,7 @@
 
 <section class="section" id="aplicacao">
 <div class="wrap">
-<h2><span class="num">§ 5.</span>Calculadora Prática</h2>
+<h2><span class="num">5.</span>Calculadora Prática</h2>
 <p class="lead">
           Inserindo valores típicos de um caso real e usando o modelo quadrático
           — o realista para ciclismo — obtém-se a velocidade ótima
@@ -718,50 +726,56 @@
 <div class="controls">
 <div class="control-group">
 <h4>Parâmetros aerodinâmicos</h4>
-<div class="slider-row" data-tooltip="Densidade do ar atmosférico. Nível do mar a 15°C: 1.225 kg/m³. Em altitude (e.g., 1500 m): ~1.05 kg/m³ — daí o efeito do 'ar rarefeito' em recordes mundiais (Cidade do México, hora-recordes em altitude).">
+<div class="slider-row">
 <div class="slider-label">
 <span class="label-name">Densidade do ar $\rho$</span>
 <span class="label-value" id="val-rho">1.225 kg/m³</span>
 </div>
 <input id="ap-rho" max="1.4" min="0.8" step="0.005" type="range" value="1.225"/>
+<span class="tip">Densidade do ar atmosférico. Nível do mar a 15°C: $\rho = 1{,}225$ kg/m³. Em altitude (e.g., 1500 m): $\sim 1{,}05$ kg/m³ — daí o efeito do ar rarefeito em recordes mundiais (Cidade do México, hora-recordes em altitude).</span>
 </div>
-<div class="slider-row" data-tooltip="Produto entre coeficiente de arrasto Cd e área frontal A do ciclista. Postura aerodinâmica (drops, contrarrelógio): 0.20–0.30 m². Postura ereta (cicloturismo): 0.45–0.60 m². É a maior alavanca de melhoria em ciclismo competitivo — daí guidões TT, capacetes aero, etc.">
+<div class="slider-row">
 <div class="slider-label">
 <span class="label-name">Área de arrasto $C_dA$</span>
 <span class="label-value" id="val-CdA">0.269 m²</span>
 </div>
 <input id="ap-CdA" max="0.60" min="0.20" step="0.005" type="range" value="0.269"/>
+<span class="tip">Produto entre coeficiente de arrasto $C_d$ e área frontal $A$ do ciclista. Postura aerodinâmica (drops, contrarrelógio): $0{,}20$–$0{,}30$ m². Postura ereta (cicloturismo): $0{,}45$–$0{,}60$ m². É a maior alavanca de melhoria em ciclismo competitivo — daí guidões TT, capacetes aero, etc.</span>
 </div>
 </div>
 <div class="control-group">
 <h4>Parâmetros fisiológicos</h4>
-<div class="slider-row" data-tooltip="Custo metabólico aproximadamente constante por unidade de tempo: BMR + postura + equilíbrio + trabalho interno dos membros. É o termo que faz aparecer um mínimo no E/d(v). Recreativo: 60–100 W. Profissional: 100–150 W.">
+<div class="slider-row">
 <div class="slider-label">
 <span class="label-name">Potência basal $P_0$</span>
 <span class="label-value gold" id="val-P0p">80 W</span>
 </div>
 <input id="ap-P0" max="250" min="20" step="1" type="range" value="80"/>
+<span class="tip">Custo metabólico aproximadamente constante por unidade de tempo: BMR + postura + equilíbrio + trabalho interno dos membros. É o termo que faz aparecer um mínimo no $E/d(v)$. Recreativo: 60–100 W. Profissional: 100–150 W.</span>
 </div>
-<div class="slider-row" data-tooltip="Massa total do sistema: ciclista + bicicleta + equipamento. Entra no rolamento (F_r = C_rr · m · g) e na cinética. Ciclismo típico: 70–90 kg (rider 65–80 kg + bike 7–12 kg).">
+<div class="slider-row">
 <div class="slider-label">
 <span class="label-name">Massa total $m$</span>
 <span class="label-value" id="val-mp">75 kg</span>
 </div>
 <input id="ap-m" max="120" min="40" step="0.5" type="range" value="75"/>
+<span class="tip">Massa total do sistema: ciclista + bicicleta + equipamento. Entra no rolamento ($F_r = C_{rr}\,m\,g$) e na cinética. Ciclismo típico: 70–90 kg (rider 65–80 kg + bike 7–12 kg).</span>
 </div>
-<div class="slider-row" data-tooltip="Coeficiente adimensional de resistência ao rolamento. Pneu de estrada bom (24–28 mm, alta pressão): 0.003–0.005. Pneu MTB de cravos: 0.010–0.015. Asfalto novo melhora; piso de paralelepípedos piora muito.">
+<div class="slider-row">
 <div class="slider-label">
 <span class="label-name">$C_{rr}$ rolamento</span>
 <span class="label-value" id="val-Crr">0.0032</span>
 </div>
 <input id="ap-Crr" max="0.012" min="0" step="0.0001" type="range" value="0.0032"/>
+<span class="tip">Coeficiente adimensional de resistência ao rolamento. Pneu de estrada bom (24–28 mm, alta pressão): $0{,}003$–$0{,}005$. Pneu MTB de cravos: $0{,}010$–$0{,}015$. Asfalto novo melhora; piso de paralelepípedos piora muito.</span>
 </div>
-<div class="slider-row" data-tooltip="Fração da energia metabólica convertida em trabalho mecânico nas pernas (E_mec = η · E_metabólica). Humana típica em cruzeiro: 20–25%. Resto vira calor (por isso o ciclista sua). É como dividimos a energia mecânica calculada para obter a energia metabólica real consumida.">
+<div class="slider-row">
 <div class="slider-label">
 <span class="label-name">Eficiência muscular $\eta$</span>
 <span class="label-value" id="val-eta">0.25</span>
 </div>
 <input id="ap-eta" max="0.35" min="0.15" step="0.005" type="range" value="0.25"/>
+<span class="tip">Fração da energia metabólica convertida em trabalho mecânico nas pernas ($E_{\text{mec}} = \eta \cdot E_{\text{metab}}$). Humana típica em cruzeiro: 20–25%. Resto vira calor (por isso o ciclista sua). É como dividimos a energia mecânica calculada para obter a energia metabólica real consumida.</span>
 </div>
 </div>
 </div>
@@ -795,7 +809,7 @@
 
 <section class="section" id="sintese">
 <div class="wrap">
-<h2><span class="num">§ 6.</span>Síntese</h2>
+<h2><span class="num">6.</span>Síntese</h2>
 <p class="lead">
           Os dois modelos fornecem soluções analíticas elegantes — um
           exponencial, o outro hiperbólico — mas levam a previsões

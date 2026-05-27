@@ -964,7 +964,62 @@
         },
       );
 
+      function positionTip(tip) {
+        const owner = tip.parentElement;
+        if (!owner) return;
+        const margin = 16;
+        const gap = 12;
+        const maxWidth = Math.max(
+          240,
+          Math.min(360, window.innerWidth - margin * 2),
+        );
+        tip.style.setProperty("--tip-max-width", maxWidth + "px");
+
+        const ownerRect = owner.getBoundingClientRect();
+        const center = ownerRect.left + ownerRect.width / 2;
+        const left = Math.min(
+          window.innerWidth - margin - maxWidth / 2,
+          Math.max(margin + maxWidth / 2, center),
+        );
+        tip.style.setProperty("--tip-left", left + "px");
+
+        const tipHeight = tip.getBoundingClientRect().height;
+        let top = ownerRect.top - tipHeight - gap;
+        const below = top < margin;
+        if (below) top = ownerRect.bottom + gap;
+        tip.classList.toggle("tip-below", below);
+        tip.style.setProperty("--tip-top", top + "px");
+      }
+
+      function positionActiveTips() {
+        document
+          .querySelectorAll(
+            ".slider-row:hover > .tip, .toggle-btn:hover > .tip, .slider-row:focus-within > .tip, .toggle-btn:focus-within > .tip",
+          )
+          .forEach(positionTip);
+      }
+
+      function setupTips() {
+        document.querySelectorAll(".tip").forEach((tip) => {
+          const owner = tip.parentElement;
+          if (!owner) return;
+          owner.addEventListener("pointerenter", () => positionTip(tip));
+          owner.addEventListener("pointermove", () => positionTip(tip), {
+            passive: true,
+          });
+          owner.addEventListener("mouseenter", () => positionTip(tip));
+          owner.addEventListener("mousemove", () => positionTip(tip), {
+            passive: true,
+          });
+          owner.addEventListener("focusin", () => positionTip(tip));
+        });
+        window.addEventListener("scroll", positionActiveTips, {
+          passive: true,
+        });
+      }
+
       window.addEventListener("load", () => {
+        setupTips();
         injectBikes();
         animateHeroBike();
         updateDynamics();
@@ -978,4 +1033,5 @@
         Plotly.Plots.resize("plot-energy");
         Plotly.Plots.resize("plot-scaling");
         Plotly.Plots.resize("plot-practical");
+        positionActiveTips();
       });
