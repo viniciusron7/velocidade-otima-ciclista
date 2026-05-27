@@ -34,6 +34,7 @@
       }
 
       body {
+        zoom: 0.75;
         font-family:
           "EB Garamond", "Times New Roman", "Liberation Serif", Georgia, serif;
         background: var(--paper);
@@ -450,6 +451,9 @@
         color: var(--ink-mute);
         font-size: 0.78em;
         letter-spacing: 0.02em;
+        flex: 0 0 auto;
+        min-width: 2.3em;
+        font-variant-numeric: lining-nums;
       }
       section h3 {
         font-family: "EB Garamond", serif;
