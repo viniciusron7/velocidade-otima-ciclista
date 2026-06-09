@@ -138,27 +138,59 @@ function animateHeroBike() {
   if (!bike) return;
   const scene = bike.parentElement;
   if (!scene) return;
-  const cycleMs = 8500;
-  let startTime = null;
+  let ticking = false;
+  let lastScrollY = window.scrollY;
+  let progress = 0;
+  let completedAtEnd = false;
 
-  function frame(now) {
-    if (startTime === null) startTime = now;
-    const elapsed = (now - startTime) % cycleMs;
-    const frac = elapsed / cycleMs;
-
+  function renderHeroBike() {
     const sceneW = scene.clientWidth;
-    const bikeW = bike.clientWidth || 160;
+    const bikeW = 160;
     const startX = -bikeW - 8;
-    const endX = sceneW + 8;
-    const xPx = startX + frac * (endX - startX);
+    const endX = sceneW + bikeW + 8;
+    const xPx = startX + progress * (endX - startX);
     bike.style.left = xPx + "px";
 
     const travel = xPx - startX;
     updateBikeWheels(bike, travel);
-
-    requestAnimationFrame(frame);
   }
-  requestAnimationFrame(frame);
+
+  function updateFromScroll() {
+    ticking = false;
+    const currentScrollY = window.scrollY;
+    const scrollDistance = Math.abs(currentScrollY - lastScrollY);
+    lastScrollY = currentScrollY;
+
+    if (scrollDistance > 0) {
+      if (completedAtEnd) {
+        progress = 0;
+        completedAtEnd = false;
+      }
+
+      const scrollSpan = Math.max(
+        1,
+        window.innerHeight * 0.55 + scene.offsetHeight * 0.9,
+      );
+      progress += scrollDistance / scrollSpan;
+
+      if (progress >= 1) {
+        progress = 1;
+        completedAtEnd = true;
+      }
+    }
+
+    renderHeroBike();
+  }
+
+  function scheduleUpdate() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(updateFromScroll);
+  }
+
+  renderHeroBike();
+  window.addEventListener("scroll", scheduleUpdate, { passive: true });
+  window.addEventListener("resize", scheduleUpdate);
 }
 
 const COL = {
@@ -180,7 +212,28 @@ const COL = {
   green: "#2e5d2a",
 };
 
+function isCompactViewport() {
+  return window.innerWidth <= 760;
+}
+
+function getBodyZoom() {
+  const zoom = parseFloat(window.getComputedStyle(document.body).zoom);
+  return Number.isFinite(zoom) && zoom > 0 ? zoom : 1;
+}
+
+function axisTitle(text) {
+  return {
+    text,
+    font: {
+      family: '"EB Garamond", serif',
+      size: isCompactViewport() ? 15 : 17,
+      color: COL.text,
+    },
+  };
+}
+
 function baseLayout(extras = {}) {
+  const compact = isCompactViewport();
   return Object.assign(
     {
       paper_bgcolor: COL.paper,
@@ -188,22 +241,22 @@ function baseLayout(extras = {}) {
       font: {
         color: COL.text,
         family: '"EB Garamond", Georgia, serif',
-        size: 15,
+        size: compact ? 14 : 15,
       },
-      margin: { t: 18, r: 22, b: 58, l: 70 },
+      margin: compact ? { t: 34, r: 12, b: 56, l: 54 } : { t: 18, r: 22, b: 58, l: 70 },
       xaxis: {
         gridcolor: COL.grid,
         zerolinecolor: COL.zero,
         linecolor: COL.line,
         tickfont: {
           family: '"Inter", sans-serif',
-          size: 13,
+          size: compact ? 11 : 13,
           color: COL.text,
         },
         title: {
           font: {
             family: '"EB Garamond", serif',
-            size: 17,
+            size: compact ? 15 : 17,
             color: COL.text,
           },
         },
@@ -214,13 +267,13 @@ function baseLayout(extras = {}) {
         linecolor: COL.line,
         tickfont: {
           family: '"Inter", sans-serif',
-          size: 13,
+          size: compact ? 11 : 13,
           color: COL.text,
         },
         title: {
           font: {
             family: '"EB Garamond", serif',
-            size: 17,
+            size: compact ? 15 : 17,
             color: COL.text,
           },
         },
@@ -231,7 +284,7 @@ function baseLayout(extras = {}) {
         borderwidth: 1,
         font: {
           family: '"EB Garamond", serif',
-          size: 17,
+          size: compact ? 14 : 17,
           color: COL.text,
         },
       },
@@ -241,7 +294,7 @@ function baseLayout(extras = {}) {
         font: {
           color: COL.hoverText,
           family: '"EB Garamond", serif',
-          size: 14,
+          size: compact ? 13 : 14,
         },
       },
     },
@@ -377,7 +430,7 @@ function plotDynamics() {
       x: ts,
       y: yL,
       mode: "lines",
-      name: "Modelo I  (F ∝ v)",
+      name: "Lin.  ",
       line: { color: COL.linear, width: 2.2, shape: "spline" },
       hovertemplate:
         "<b>Modelo I</b><br>t = %{x:.1f} s<br>" +
@@ -388,7 +441,7 @@ function plotDynamics() {
       x: ts,
       y: yQ,
       mode: "lines",
-      name: "Modelo II  (F ∝ v²)",
+      name: "Quad.  ",
       line: {
         color: COL.quadratic,
         width: 2.2,
@@ -426,24 +479,10 @@ function plotDynamics() {
 
   const layout = baseLayout({
     xaxis: Object.assign({}, baseLayout().xaxis, {
-      title: {
-        text: "t (s)",
-        font: {
-          family: '"EB Garamond", serif',
-          size: 17,
-          color: COL.text,
-        },
-      },
+      title: axisTitle("t (s)"),
     }),
     yaxis: Object.assign({}, baseLayout().yaxis, {
-      title: {
-        text: yLabel,
-        font: {
-          family: '"EB Garamond", serif',
-          size: 17,
-          color: COL.text,
-        },
-      },
+      title: axisTitle(yLabel),
     }),
     legend: Object.assign({}, baseLayout().legend, {
       x: 0.99,
@@ -606,15 +645,16 @@ function plotEnergy() {
   const vs = [];
   for (let i = 0; i <= N; i++) vs.push(vMin + (i / N) * (vMax - vMin));
 
+  const hasTemporalCost = showP0 && P0 > 0;
   const eL = vs.map((v) => eDLinear(v, P0, b, Fr, showP0));
   const eQ = vs.map((v) => eDQuad(v, P0, c, Fr, showP0));
 
-  const vStarL = Math.sqrt(P0 / b);
-  const vStarQ = Math.cbrt(P0 / (2 * c));
-  const eStarL = showP0 ? 2 * Math.sqrt(P0 * b) + Fr : Fr + b * vMin;
-  const eStarQ = showP0
+  const vStarL = hasTemporalCost ? Math.sqrt(P0 / b) : NaN;
+  const vStarQ = hasTemporalCost ? Math.cbrt(P0 / (2 * c)) : NaN;
+  const eStarL = hasTemporalCost ? 2 * Math.sqrt(P0 * b) + Fr : NaN;
+  const eStarQ = hasTemporalCost
     ? (3 / Math.pow(2, 2 / 3)) * Math.pow(P0, 2 / 3) * Math.pow(c, 1 / 3) + Fr
-    : Fr + c * vMin * vMin;
+    : NaN;
 
   const traces = [];
   if (showLin) {
@@ -622,12 +662,12 @@ function plotEnergy() {
       x: vs,
       y: eL,
       mode: "lines",
-      name: "Modelo I:  P₀/v + F_r + bv",
+      name: "Lin.  ",
       line: { color: COL.linear, width: 2.4 },
       hovertemplate:
         "<b>Modelo I</b><br>v = %{x:.2f} m/s<br>E/d = %{y:.2f} J/m<extra></extra>",
     });
-    if (showP0 && vStarL > vMin && vStarL < vMax) {
+    if (hasTemporalCost && vStarL > vMin && vStarL < vMax) {
       traces.push({
         x: [vStarL],
         y: [eStarL],
@@ -656,12 +696,12 @@ function plotEnergy() {
       x: vs,
       y: eQ,
       mode: "lines",
-      name: "Modelo II:  P₀/v + F_r + cv²",
+      name: "Quad.  ",
       line: { color: COL.quadratic, width: 2.4 },
       hovertemplate:
         "<b>Modelo II</b><br>v = %{x:.2f} m/s<br>E/d = %{y:.2f} J/m<extra></extra>",
     });
-    if (showP0 && vStarQ > vMin && vStarQ < vMax) {
+    if (hasTemporalCost && vStarQ > vMin && vStarQ < vMax) {
       traces.push({
         x: [vStarQ],
         y: [eStarQ],
@@ -688,26 +728,17 @@ function plotEnergy() {
 
   const layout = baseLayout({
     xaxis: Object.assign({}, baseLayout().xaxis, {
-      title: {
-        text: "v (m/s)",
-        font: {
-          family: '"EB Garamond", serif',
-          size: 17,
-          color: COL.text,
-        },
-      },
+      title: axisTitle("v (m/s)"),
       range: [0, vMax],
     }),
     yaxis: Object.assign({}, baseLayout().yaxis, {
-      title: {
-        text: "E/d (J/m)",
-        font: {
-          family: '"EB Garamond", serif',
-          size: 17,
-          color: COL.text,
-        },
-      },
-      range: [0, Math.max(50, Math.min(2 * Math.max(eStarL, eStarQ), 200))],
+      title: axisTitle("E/d (J/m)"),
+      range: [
+        0,
+        hasTemporalCost
+          ? Math.max(50, Math.min(2 * Math.max(eStarL, eStarQ), 200))
+          : Math.max(50, Math.min(Math.max(...eL, ...eQ) * 1.15, 200)),
+      ],
     }),
     legend: Object.assign({}, baseLayout().legend, {
       x: 0.99,
@@ -723,12 +754,20 @@ function plotEnergy() {
     responsive: true,
   });
 
-  setVal("opt-vL", showP0 ? formatNum(vStarL, 2) + " m/s" : "—");
-  setVal("opt-vQ", showP0 ? formatNum(vStarQ, 2) + " m/s" : "—");
-  setVal("opt-EL", showP0 ? formatNum(eStarL, 2) + " J/m" : "—");
-  setVal("opt-EQ", showP0 ? formatNum(eStarQ, 2) + " J/m" : "—");
-  setVal("opt-vLkmh", showP0 ? formatNum(vStarL * KMH, 1) + " km/h" : "—");
-  setVal("opt-vQkmh", showP0 ? formatNum(vStarQ * KMH, 1) + " km/h" : "—");
+  setVal("opt-vL", hasTemporalCost ? formatNum(vStarL, 2) + " m/s" : "—");
+  setVal("opt-vQ", hasTemporalCost ? formatNum(vStarQ, 2) + " m/s" : "—");
+  setVal("opt-EL", hasTemporalCost ? formatNum(eStarL, 2) + " J/m" : "—");
+  setVal("opt-EQ", hasTemporalCost ? formatNum(eStarQ, 2) + " J/m" : "—");
+  setVal("opt-vLkmh", hasTemporalCost ? formatNum(vStarL * KMH, 1) + " km/h" : "—");
+  setVal("opt-vQkmh", hasTemporalCost ? formatNum(vStarQ * KMH, 1) + " km/h" : "—");
+
+  const status = document.getElementById("opt-status");
+  if (status) {
+    status.classList.toggle("off", !hasTemporalCost);
+    status.textContent = hasTemporalCost
+      ? "P0/v ligado: existe um mínimo interior finito."
+      : "Sem P0/v: o menor gasto fica apenas no limite v → 0.";
+  }
 }
 
 function updateEnergy() {
@@ -792,7 +831,7 @@ function plotScaling() {
       x: P0s,
       y: vL,
       mode: "lines",
-      name: "Modelo I:  v* = √(P₀/b)",
+      name: "Lin.  ",
       line: { color: COL.linear, width: 2.4 },
       hovertemplate:
         "<b>Modelo I</b><br>P₀ = %{x:.0f} W<br>v* = %{y:.2f} m/s<extra></extra>",
@@ -801,7 +840,7 @@ function plotScaling() {
       x: P0s,
       y: vQ,
       mode: "lines",
-      name: "Modelo II:  v* = ∛(P₀/2c)",
+      name: "Quad.  ",
       line: { color: COL.quadratic, width: 2.4 },
       hovertemplate:
         "<b>Modelo II</b><br>P₀ = %{x:.0f} W<br>v* = %{y:.2f} m/s<extra></extra>",
@@ -810,24 +849,10 @@ function plotScaling() {
 
   const layout = baseLayout({
     xaxis: Object.assign({}, baseLayout().xaxis, {
-      title: {
-        text: "P₀  —  potência basal (W)",
-        font: {
-          family: '"EB Garamond", serif',
-          size: 17,
-          color: COL.text,
-        },
-      },
+      title: axisTitle("P₀ - potência basal (W)"),
     }),
     yaxis: Object.assign({}, baseLayout().yaxis, {
-      title: {
-        text: "v*  —  velocidade ótima (m/s)",
-        font: {
-          family: '"EB Garamond", serif',
-          size: 17,
-          color: COL.text,
-        },
-      },
+      title: axisTitle("v* - velocidade ótima (m/s)"),
     }),
     legend: Object.assign({}, baseLayout().legend, {
       x: 0.02,
@@ -849,6 +874,7 @@ const apState = {
   CdA: 0.269,
   P0: 80,
   m: 75,
+  Crr: 0.0032,
 };
 
 function updatePractical() {
@@ -856,16 +882,20 @@ function updatePractical() {
   setVal("val-CdA", formatNum(apState.CdA, 3) + " m²");
   setVal("val-P0p", formatNum(apState.P0, 0) + " W");
   setVal("val-mp", formatNum(apState.m, 1) + " kg");
+  setVal("val-Crr", formatNum(apState.Crr, 4));
 
   const c = 0.5 * apState.rho * apState.CdA;
+  const Fr = apState.Crr * apState.m * G;
   const vStar = Math.cbrt(apState.P0 / (2 * c));
   const eStar =
+    Fr +
     (3 / Math.pow(2, 2 / 3)) * Math.pow(apState.P0, 2 / 3) * Math.pow(c, 1 / 3);
 
   setVal("ap-vstar", formatNum(vStar, 2) + "  m/s");
   setVal("ap-vstar-kmh", formatNum(vStar * KMH, 1) + " km/h");
   setVal("ap-Emin", formatNum(eStar, 1) + "  J/m");
   setVal("calc-c", formatNum(c, 4));
+  setVal("calc-Fr", formatNum(Fr, 2));
   setVal("calc-v", formatNum(vStar, 3));
 
   const vMin = 0.5,
@@ -873,14 +903,14 @@ function updatePractical() {
   const N = 300;
   const vs = [];
   for (let i = 0; i <= N; i++) vs.push(vMin + (i / N) * (vMax - vMin));
-  const eds = vs.map((v) => apState.P0 / v + c * v * v);
+  const eds = vs.map((v) => apState.P0 / v + Fr + c * v * v);
 
   const traces = [
     {
       x: vs,
       y: eds,
       mode: "lines",
-      name: "E/d (J/m)",
+      name: "E/d",
       line: { color: COL.accent, width: 2.4 },
       hovertemplate: "v = %{x:.2f} m/s<br>E/d = %{y:.2f} J/m<extra></extra>",
     },
@@ -908,24 +938,10 @@ function updatePractical() {
 
   const layout = baseLayout({
     xaxis: Object.assign({}, baseLayout().xaxis, {
-      title: {
-        text: "v (m/s)",
-        font: {
-          family: '"EB Garamond", serif',
-          size: 17,
-          color: COL.text,
-        },
-      },
+      title: axisTitle("v (m/s)"),
     }),
     yaxis: Object.assign({}, baseLayout().yaxis, {
-      title: {
-        text: "E/d (J/m)",
-        font: {
-          family: '"EB Garamond", serif',
-          size: 17,
-          color: COL.text,
-        },
-      },
+      title: axisTitle("E/d (J/m)"),
       range: [0, eStar * 2.5],
     }),
     legend: Object.assign({}, baseLayout().legend, {
@@ -943,13 +959,14 @@ function updatePractical() {
   });
 }
 
-["ap-rho", "ap-CdA", "ap-P0", "ap-m"].forEach((id) => {
+["ap-rho", "ap-CdA", "ap-P0", "ap-m", "ap-Crr"].forEach((id) => {
   document.getElementById(id).addEventListener("input", (e) => {
     const propMap = {
       "ap-rho": "rho",
       "ap-CdA": "CdA",
       "ap-P0": "P0",
       "ap-m": "m",
+      "ap-Crr": "Crr",
     };
     apState[propMap[id]] = parseFloat(e.target.value);
     updatePractical();
@@ -961,8 +978,9 @@ function positionTip(tip) {
   if (!owner) return;
   const margin = 16;
   const gap = 12;
+  const zoom = getBodyZoom();
   const maxWidth = Math.min(300, window.innerWidth - margin * 2);
-  tip.style.setProperty("--tip-max-width", maxWidth + "px");
+  tip.style.setProperty("--tip-max-width", maxWidth / zoom + "px");
 
   const tipRect = tip.getBoundingClientRect();
   const tipWidth = tipRect.width;
@@ -972,8 +990,27 @@ function positionTip(tip) {
 
   let left = ownerRect.left - gap - tipWidth;
   let placement = "left";
+  let top;
 
-  if (left < margin) {
+  if (isCompactViewport()) {
+    left = ownerRect.left + ownerRect.width / 2 - tipWidth / 2;
+    if (left < margin) left = margin;
+    if (left + tipWidth > window.innerWidth - margin) {
+      left = window.innerWidth - margin - tipWidth;
+    }
+
+    const above = ownerRect.top - gap - tipHeight;
+    if (above >= margin) {
+      top = above;
+      placement = "above";
+    } else {
+      top = ownerRect.bottom + gap;
+      placement = "below";
+      if (top + tipHeight > window.innerHeight - margin) {
+        top = window.innerHeight - margin - tipHeight;
+      }
+    }
+  } else if (left < margin) {
     const rightCandidate = ownerRect.right + gap;
     if (rightCandidate + tipWidth <= window.innerWidth - margin) {
       left = rightCandidate;
@@ -987,15 +1024,19 @@ function positionTip(tip) {
     }
   }
 
-  let top = ownerRect.top + ownerRect.height / 2 - tipHeight / 2;
+  if (top === undefined) {
+    top = ownerRect.top + ownerRect.height / 2 - tipHeight / 2;
+  }
   if (top < margin) top = margin;
   if (top + tipHeight > window.innerHeight - margin) {
     top = window.innerHeight - margin - tipHeight;
   }
 
-  tip.style.setProperty("--tip-left", left + "px");
-  tip.style.setProperty("--tip-top", top + "px");
+  tip.style.setProperty("--tip-left", left / zoom + "px");
+  tip.style.setProperty("--tip-top", top / zoom + "px");
   tip.classList.toggle("tip-right", placement === "right");
+  tip.classList.toggle("tip-above", placement === "above");
+  tip.classList.toggle("tip-below", placement === "below");
 }
 
 function positionActiveTips() {
@@ -1025,8 +1066,28 @@ function setupTips() {
   });
 }
 
+function setupSmoothAnchors() {
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  document.querySelectorAll('a[href^="#"]').forEach((link) => {
+    link.addEventListener("click", (event) => {
+      const targetId = link.getAttribute("href").slice(1);
+      if (!targetId) return;
+      const target = document.getElementById(targetId);
+      if (!target) return;
+
+      event.preventDefault();
+      target.scrollIntoView({
+        behavior: reduceMotion.matches ? "auto" : "smooth",
+        block: "start",
+      });
+      history.pushState(null, "", "#" + targetId);
+    });
+  });
+}
+
 window.addEventListener("load", () => {
   setupTips();
+  setupSmoothAnchors();
   injectBikes();
   animateHeroBike();
   updateDynamics();
