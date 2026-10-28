@@ -9,7 +9,7 @@ MathJax = {
       ["\\[", "\\]"],
     ],
     processEscapes: true,
-    tags: "ams",
+    tags: "all",
   },
   svg: { fontCache: "global" },
   options: {

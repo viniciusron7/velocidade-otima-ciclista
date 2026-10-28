@@ -129,8 +129,8 @@ function setPaused(paused) {
   btn.setAttribute("aria-pressed", paused ? "false" : "true");
   const icon = btn.querySelector(".pp-icon");
   const label = btn.querySelector(".pp-label");
-  if (icon) icon.textContent = paused ? "▶" : "❚❚";
-  if (label) label.textContent = paused ? "Play" : "Pause";
+  if (icon) icon.textContent = paused ? "▷" : "∥";
+  if (label) label.textContent = paused ? "Iniciar" : "Pausar";
 }
 
 function animateHeroBike() {
@@ -194,22 +194,22 @@ function animateHeroBike() {
 }
 
 const COL = {
-  paper: "rgba(0,0,0,0)",
-  plot: "rgba(0,0,0,0)",
-  text: "#3d3a35",
-  grid: "#e2dccb",
-  zero: "#9b937d",
-  line: "#9b937d",
-  legendBg: "rgba(255, 254, 248, 0.92)",
-  legendBorder: "#cfc9b8",
-  hoverBg: "#fbfaf4",
-  hoverBorder: "#cfc9b8",
-  hoverText: "#1c1a17",
-  linear: "#1d3f7a",
-  quadratic: "#7a1f1f",
-  gold: "#8a5a18",
-  accent: "#2a4a7a",
-  green: "#2e5d2a",
+  paper: "#ffffff",
+  plot: "#ffffff",
+  text: "#111111",
+  grid: "#e8e8e8",
+  zero: "#aaaaaa",
+  line: "#aaaaaa",
+  legendBg: "rgba(255, 255, 255, 0.96)",
+  legendBorder: "#dddddd",
+  hoverBg: "#ffffff",
+  hoverBorder: "#b8b8b8",
+  hoverText: "#111111",
+  linear: "#0759d8",
+  quadratic: "#c01d3a",
+  gold: "#a86400",
+  accent: "#0759d8",
+  green: "#13864b",
 };
 
 function isCompactViewport() {
@@ -225,8 +225,8 @@ function axisTitle(text) {
   return {
     text,
     font: {
-      family: '"EB Garamond", serif',
-      size: isCompactViewport() ? 15 : 17,
+      family: '"Latin Modern Roman", serif',
+      size: isCompactViewport() ? 17 : 19,
       color: COL.text,
     },
   };
@@ -240,23 +240,30 @@ function baseLayout(extras = {}) {
       plot_bgcolor: COL.plot,
       font: {
         color: COL.text,
-        family: '"EB Garamond", Georgia, serif',
-        size: compact ? 14 : 15,
+        family: '"Latin Modern Roman", serif',
+        size: compact ? 16 : 18,
       },
-      margin: compact ? { t: 34, r: 12, b: 56, l: 54 } : { t: 18, r: 22, b: 58, l: 70 },
+      margin: compact
+        ? { t: 36, r: 16, b: 64, l: 60 }
+        : { t: 20, r: 24, b: 68, l: 78 },
       xaxis: {
         gridcolor: COL.grid,
         zerolinecolor: COL.zero,
         linecolor: COL.line,
+        showline: true,
+        ticks: "outside",
+        ticklen: 4,
+        tickcolor: COL.line,
+        automargin: true,
         tickfont: {
-          family: '"Inter", sans-serif',
-          size: compact ? 11 : 13,
+          family: '"Latin Modern Roman", serif',
+          size: compact ? 13 : 15,
           color: COL.text,
         },
         title: {
           font: {
-            family: '"EB Garamond", serif',
-            size: compact ? 15 : 17,
+            family: '"Latin Modern Roman", serif',
+            size: compact ? 17 : 19,
             color: COL.text,
           },
         },
@@ -265,15 +272,20 @@ function baseLayout(extras = {}) {
         gridcolor: COL.grid,
         zerolinecolor: COL.zero,
         linecolor: COL.line,
+        showline: true,
+        ticks: "outside",
+        ticklen: 4,
+        tickcolor: COL.line,
+        automargin: true,
         tickfont: {
-          family: '"Inter", sans-serif',
-          size: compact ? 11 : 13,
+          family: '"Latin Modern Roman", serif',
+          size: compact ? 13 : 15,
           color: COL.text,
         },
         title: {
           font: {
-            family: '"EB Garamond", serif',
-            size: compact ? 15 : 17,
+            family: '"Latin Modern Roman", serif',
+            size: compact ? 17 : 19,
             color: COL.text,
           },
         },
@@ -283,8 +295,8 @@ function baseLayout(extras = {}) {
         bordercolor: COL.legendBorder,
         borderwidth: 1,
         font: {
-          family: '"EB Garamond", serif',
-          size: compact ? 14 : 17,
+          family: '"Latin Modern Roman", serif',
+          size: compact ? 13 : 14,
           color: COL.text,
         },
       },
@@ -293,8 +305,8 @@ function baseLayout(extras = {}) {
         bordercolor: COL.hoverBorder,
         font: {
           color: COL.hoverText,
-          family: '"EB Garamond", serif',
-          size: compact ? 13 : 14,
+          family: '"Latin Modern Roman", serif',
+          size: compact ? 15 : 16,
         },
       },
     },
@@ -512,44 +524,93 @@ function animateBike(data) {
     (xMax > 1000 ? (xMax / 1000).toFixed(2) + " km" : xMax.toFixed(0) + " m");
 
   if (dynState._raf) cancelAnimationFrame(dynState._raf);
+  if (dynState._animationCleanup) dynState._animationCleanup();
 
   animState.dynElapsed = 0;
   animState.lastDynFrameTime = null;
 
   const duration = 6500;
-  const ts = data.ts;
+  const lastIndex = data.ts.length - 1;
+  const bL = document.getElementById("bike-L");
+  const bQ = document.getElementById("bike-Q");
+  const canvas = (bL || bQ)?.parentElement;
+  let canvasWidth = canvas ? canvas.clientWidth : 0;
+  const riders = [
+    {
+      marker: bL,
+      trail: document.getElementById("trail-L"),
+      positions: data.xL,
+    },
+    {
+      marker: bQ,
+      trail: document.getElementById("trail-Q"),
+      positions: data.xQ,
+    },
+  ].map((rider) => {
+    if (rider.marker) rider.marker.style.left = "0";
+    if (rider.trail) {
+      rider.trail.style.width = "100%";
+      rider.trail.style.transform = "scaleX(0)";
+    }
+    return {
+      ...rider,
+      wheels: rider.marker
+        ? rider.marker.querySelectorAll(".leftTyre, .rightTyre")
+        : [],
+    };
+  });
+
+  function updateCanvasWidth() {
+    canvasWidth = canvas ? canvas.clientWidth : 0;
+  }
+  function resetFrameClock() {
+    // Browsers suspend rAF in background tabs; ignore that inactive time.
+    animState.lastDynFrameTime = null;
+  }
+
+  let resizeObserver;
+  if (canvas && typeof ResizeObserver !== "undefined") {
+    resizeObserver = new ResizeObserver((entries) => {
+      canvasWidth = entries[0].contentRect.width;
+    });
+    resizeObserver.observe(canvas);
+  } else {
+    window.addEventListener("resize", updateCanvasWidth);
+  }
+  document.addEventListener("visibilitychange", resetFrameClock);
+  dynState._animationCleanup = () => {
+    if (resizeObserver) resizeObserver.disconnect();
+    else window.removeEventListener("resize", updateCanvasWidth);
+    document.removeEventListener("visibilitychange", resetFrameClock);
+  };
 
   function frame(now) {
-    if (animState.lastDynFrameTime !== null && !animState.paused) {
+    const playing = !animState.paused && !document.hidden;
+    if (animState.lastDynFrameTime !== null && playing) {
       animState.dynElapsed =
         (animState.dynElapsed + (now - animState.lastDynFrameTime)) % duration;
     }
-    animState.lastDynFrameTime = now;
+    animState.lastDynFrameTime = playing ? now : null;
 
-    const frac = animState.dynElapsed / duration;
-    const idx = Math.min(ts.length - 1, Math.floor(frac * (ts.length - 1)));
-    const xL = data.xL[idx],
-      xQ = data.xQ[idx];
-    const pctL = Math.min(100, (xL / xMax) * 92);
-    const pctQ = Math.min(100, (xQ / xMax) * 92);
+    // Physical samples are evenly spaced. Interpolate them at every display
+    // frame rather than stepping through the samples at a fixed visual rate.
+    const sample = (animState.dynElapsed / duration) * lastIndex;
+    const lower = Math.floor(sample);
+    const upper = Math.min(lastIndex, lower + 1);
+    const blend = sample - lower;
 
-    const bL = document.getElementById("bike-L");
-    const bQ = document.getElementById("bike-Q");
-    const tL = document.getElementById("trail-L");
-    const tQ = document.getElementById("trail-Q");
-
-    if (bL) bL.style.left = pctL + "%";
-    if (bQ) bQ.style.left = pctQ + "%";
-    if (tL) tL.style.width = pctL + "%";
-    if (tQ) tQ.style.width = pctQ + "%";
-
-    const canvas = bL ? bL.parentElement : null;
-    if (canvas) {
-      const cw = canvas.clientWidth;
-      const distLpx = (pctL / 100) * cw;
-      const distQpx = (pctQ / 100) * cw;
-      updateBikeWheels(bL, distLpx);
-      updateBikeWheels(bQ, distQpx);
+    for (const rider of riders) {
+      const x =
+        rider.positions[lower] +
+        (rider.positions[upper] - rider.positions[lower]) * blend;
+      const fraction = Math.min(1, (x / xMax) * 0.92);
+      const distancePx = fraction * canvasWidth;
+      if (rider.marker) {
+        rider.marker.style.transform = `translate3d(${distancePx}px, 0, 0)`;
+      }
+      if (rider.trail) rider.trail.style.transform = `scaleX(${fraction})`;
+      const wheelRotation = `rotate(${(distancePx / (85 * 0.3)) * (180 / Math.PI)}deg)`;
+      for (const wheel of rider.wheels) wheel.style.transform = wheelRotation;
     }
 
     dynState._raf = requestAnimationFrame(frame);
@@ -683,8 +744,8 @@ function plotEnergy() {
         textposition: "middle right",
         textfont: {
           color: COL.gold,
-          size: 16,
-          family: '"EB Garamond", serif',
+          size: isCompactViewport() ? 18 : 20,
+          family: '"Latin Modern Roman", serif',
         },
         hovertemplate:
           "v*_lin = %{x:.2f} m/s<br>E/d* = %{y:.2f} J/m<extra></extra>",
@@ -717,8 +778,8 @@ function plotEnergy() {
         textposition: "middle right",
         textfont: {
           color: COL.gold,
-          size: 16,
-          family: '"EB Garamond", serif',
+          size: isCompactViewport() ? 18 : 20,
+          family: '"Latin Modern Roman", serif',
         },
         hovertemplate:
           "v*_quad = %{x:.2f} m/s<br>E/d* = %{y:.2f} J/m<extra></extra>",
@@ -758,8 +819,14 @@ function plotEnergy() {
   setVal("opt-vQ", hasTemporalCost ? formatNum(vStarQ, 2) + " m/s" : "—");
   setVal("opt-EL", hasTemporalCost ? formatNum(eStarL, 2) + " J/m" : "—");
   setVal("opt-EQ", hasTemporalCost ? formatNum(eStarQ, 2) + " J/m" : "—");
-  setVal("opt-vLkmh", hasTemporalCost ? formatNum(vStarL * KMH, 1) + " km/h" : "—");
-  setVal("opt-vQkmh", hasTemporalCost ? formatNum(vStarQ * KMH, 1) + " km/h" : "—");
+  setVal(
+    "opt-vLkmh",
+    hasTemporalCost ? formatNum(vStarL * KMH, 1) + " km/h" : "—",
+  );
+  setVal(
+    "opt-vQkmh",
+    hasTemporalCost ? formatNum(vStarQ * KMH, 1) + " km/h" : "—",
+  );
 
   const status = document.getElementById("opt-status");
   if (status) {
@@ -929,8 +996,8 @@ function updatePractical() {
       textposition: "top center",
       textfont: {
         color: COL.green,
-        size: 16,
-        family: '"EB Garamond", serif',
+        size: isCompactViewport() ? 18 : 20,
+        family: '"Latin Modern Roman", serif',
       },
       hoverinfo: "skip",
     },
@@ -1080,6 +1147,9 @@ function setupSmoothAnchors() {
         behavior: reduceMotion.matches ? "auto" : "smooth",
         block: "start",
       });
+      if (link.classList.contains("skip-link")) {
+        target.focus({ preventScroll: true });
+      }
       history.pushState(null, "", "#" + targetId);
     });
   });
